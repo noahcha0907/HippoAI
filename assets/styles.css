@@ -120,6 +120,8 @@ nav.main-nav a:hover {
 /* ---- Hero ---- */
 
 .hero {
+  position: relative;
+  overflow: hidden;
   min-height: 86vh;
   display: flex;
   flex-direction: column;
@@ -127,6 +129,27 @@ nav.main-nav a:hover {
   justify-content: center;
   text-align: center;
   padding: 64px 24px 40px;
+}
+
+.hero-bg-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(640px, 92vw);
+  height: auto;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .hero .logo-slot-lg {
