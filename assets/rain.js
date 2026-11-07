@@ -115,7 +115,7 @@
   function draw() {
     const dpr = Math.min(devicePixelRatio || 1, 1.5);
     // Integer tile size ensures every cell is a square, without seams.
-    const side = Math.max(1, Math.round(canvas.clientWidth * dpr / 5));
+    const side = Math.max(1, Math.round(canvas.parentElement.clientWidth * dpr / 5));
     if (canvas.width !== side * 5 || canvas.height !== side * 3) {
       canvas.width = side * 5; canvas.height = side * 3;
     }
@@ -155,13 +155,25 @@
   document.addEventListener('visibilitychange', sync);
   const observer = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); });
   observer.observe(canvas);
-  const resize = new ResizeObserver(() => { if (!lost) draw(); });
-  resize.observe(canvas);
+  // Observe the CSS-sized container, not the canvas whose backing buffer we
+  // resize. Defer drawing out of ResizeObserver delivery to avoid feedback.
+  let resizeFrame = 0;
+  const resize = new ResizeObserver(() => {
+    cancelAnimationFrame(resizeFrame);
+    resizeFrame = requestAnimationFrame(() => {
+      resizeFrame = 0;
+      if (!lost) draw();
+    });
+  });
+  resize.observe(canvas.parentElement);
   canvas.addEventListener('webglcontextlost', event => {
-    event.preventDefault(); lost = true; cancelAnimationFrame(animation);
+    event.preventDefault(); lost = true; cancelAnimationFrame(animation); cancelAnimationFrame(resizeFrame);
     unavailable('Animation interrupted. Reload to restart.');
   });
-  window.addEventListener('pagehide', () => { cancelAnimationFrame(animation); });
+  window.addEventListener('pagehide', () => {
+    cancelAnimationFrame(animation);
+    cancelAnimationFrame(resizeFrame);
+  });
   window.addEventListener('pageshow', sync);
   reset(); sync();
 })();
