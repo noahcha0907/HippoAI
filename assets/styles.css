@@ -142,7 +142,7 @@ nav.main-nav a:hover {
 
 .hero h1 {
   margin: 0;
-  font-size: clamp(2.75rem, 8vw, 5rem);
+  font-size: clamp(3.5rem, 12vw, 7rem);
   color: var(--accent);
   letter-spacing: 0.03em;
 }
@@ -342,6 +342,30 @@ section .section-head p {
 .card h3 {
   margin-top: 0;
   color: var(--accent);
+}
+
+.card p:last-child {
+  margin-bottom: 0;
+}
+
+/* Clickable cards (e.g. the homepage quick links) get a glassy pop-up hover
+   instead of a separate "Go to X" link. */
+a.card {
+  display: block;
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+a.card:hover {
+  transform: translateY(-6px);
+  background: rgba(251, 223, 228, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-color: var(--accent);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.4);
+  text-decoration: none;
 }
 
 /* ---- Footer ---- */
