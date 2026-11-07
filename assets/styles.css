@@ -1,6 +1,6 @@
 /* HIPPO site wireframe — shared styles
-   HIPPO palette (sourced from HIPPO palette.pdf / HIPPO color palette.pdf): dark purple
-   #5C4954 background, light purple #ECCAE9 for logo/accent, orange #FCD0A1 for text.
+   HIPPO palette (sourced from HIPPO palette.pdf): dark purple #5C4954 background,
+   light purple #ECCAE9 for logo/accent, pastel pink #FFC0CB for text.
    Final copy/stats come from docs/hippo-website-pitch.md. */
 
 :root {
@@ -8,8 +8,8 @@
   --bg-raised: #705f69;
   --bg-card: #695862;
   --border: #8a7c84;
-  --text: #fcd0a1;
-  --text-dim: #fcd0a1;
+  --text: #ffc0cb;
+  --text-dim: #ffc0cb;
   --accent: #eccae9;
   --accent-dim: #c8aac4;
   --maxw: 1120px;
