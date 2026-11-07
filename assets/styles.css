@@ -1,0 +1,346 @@
+/* HIPPO site wireframe — shared styles
+   Brand base: dark ground (#1f1f1f) + orange accent (#ff9900), carried over from the
+   original index.html placeholder. Final copy/stats come from docs/hippo-website-pitch.md. */
+
+:root {
+  --bg: #1f1f1f;
+  --bg-raised: #2a2a2a;
+  --bg-card: #292929;
+  --border: #3d3d3d;
+  --text: #f1f1f1;
+  --text-dim: #b8b8b8;
+  --accent: #ff9900;
+  --accent-dim: #cc7a00;
+  --maxw: 1120px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---- Header / Nav ---- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(31, 31, 31, 0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: var(--text);
+}
+
+.brand .logo-slot {
+  width: 36px;
+  height: 36px;
+  border: 2px dashed var(--accent);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 0.6rem;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.brand strong {
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+nav.main-nav ul {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav.main-nav a {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+nav.main-nav a:hover,
+nav.main-nav a[aria-current="page"] {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ---- Hero ---- */
+
+.hero {
+  min-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 64px 24px 40px;
+}
+
+.hero .logo-slot-lg {
+  width: 96px;
+  height: 96px;
+  border: 2px dashed var(--accent);
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  font-size: 0.75rem;
+  margin-bottom: 24px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(2.75rem, 8vw, 5rem);
+  color: var(--accent);
+  letter-spacing: 0.03em;
+}
+
+.hero .tagline {
+  margin: 16px 0 0;
+  max-width: 640px;
+  color: var(--text-dim);
+  font-size: 1.15rem;
+}
+
+.hero .cta-row {
+  margin-top: 32px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.95rem;
+  border: 2px solid var(--accent);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #1f1f1f;
+}
+
+.btn-primary:hover {
+  background: var(--accent-dim);
+  text-decoration: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--accent);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 153, 0, 0.1);
+  text-decoration: none;
+}
+
+.scroll-cue {
+  margin-top: 48px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  animation: bob 2s ease-in-out infinite;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* ---- Generic section ---- */
+
+section {
+  padding: 72px 0;
+  border-top: 1px solid var(--border);
+}
+
+section .section-head {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 40px;
+}
+
+section .section-head .eyebrow {
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+section .section-head h2 {
+  margin: 8px 0 12px;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+}
+
+section .section-head p {
+  color: var(--text-dim);
+}
+
+.placeholder-note {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  display: inline-block;
+  margin: 0 auto 32px;
+}
+
+/* ---- Stats / evidence grid ---- */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.stat-card .stat-value {
+  font-size: 2.4rem;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.stat-card .stat-label {
+  margin-top: 8px;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.evidence-list {
+  margin-top: 40px;
+  display: grid;
+  gap: 16px;
+}
+
+.evidence-item {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 6px;
+  padding: 18px 20px;
+  color: var(--text-dim);
+}
+
+.evidence-item strong {
+  color: var(--text);
+}
+
+/* ---- Content blocks (about / mission / demo) ---- */
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.media-slot {
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+  color: var(--text-dim);
+  background: var(--bg-raised);
+  text-align: center;
+  padding: 24px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.card h3 {
+  margin-top: 0;
+  color: var(--accent);
+}
+
+/* ---- Footer ---- */
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 0;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.site-footer a {
+  color: var(--text-dim);
+}
