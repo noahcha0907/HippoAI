@@ -82,7 +82,7 @@
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
   gl.useProgram(program); gl.enable(gl.BLEND); gl.blendFunc(gl.DST_COLOR, gl.ZERO);
-  gl.clearColor(0.957, 0.953, 0.929, 1);
+  gl.clearColor(1, 1, 1, 1);
   const SIZE = 320, STEP = 1 / 120;
   let cells = [], time = 0, accumulator = 0, previous = 0, animation = 0;
   let paused = reduced.matches, visible = true, lost = false;
