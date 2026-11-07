@@ -1,16 +1,17 @@
 /* HIPPO site wireframe — shared styles
-   HIPPO palette: dark purple background, light purple for logo/accent, pastel pink for text.
+   HIPPO palette (sourced from HIPPO palette.pdf): dark purple #5C4954 background,
+   light purple #ECCAE9 for logo/accent, pastel pink #FFC0CB for text.
    Final copy/stats come from docs/hippo-website-pitch.md. */
 
 :root {
-  --bg: #1e1033;
-  --bg-raised: #2a1b4a;
-  --bg-card: #271843;
-  --border: #42295f;
-  --text: #f4b8d9;
-  --text-dim: #c0899f;
-  --accent: #b98ef2;
-  --accent-dim: #9a6edb;
+  --bg: #5c4954;
+  --bg-raised: #705f69;
+  --bg-card: #695862;
+  --border: #8a7c84;
+  --text: #ffc0cb;
+  --text-dim: #c696a1;
+  --accent: #eccae9;
+  --accent-dim: #c8aac4;
   --maxw: 1120px;
 }
 
@@ -51,7 +52,7 @@ a:hover {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(30, 16, 51, 0.92);
+  background: rgba(92, 73, 84, 0.92);
   backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--border);
 }
@@ -179,7 +180,7 @@ nav.main-nav a[aria-current="page"] {
 }
 
 .btn-secondary:hover {
-  background: rgba(185, 142, 242, 0.12);
+  background: rgba(236, 202, 233, 0.14);
   text-decoration: none;
 }
 
