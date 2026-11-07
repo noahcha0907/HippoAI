@@ -1,17 +1,19 @@
 /* HIPPO site wireframe — shared styles
-   HIPPO palette (sourced from HIPPO palette.pdf): dark purple #5C4954 background,
-   light purple #ECCAE9 for logo/accent, pastel pink #FFC0CB for text.
+   HIPPO palette, pushed for more contrast (60/30/10):
+   60% dominant — deep near-black purple background (#291420, darkened from brand #5C4954)
+   30% secondary — raised/card surfaces + pastel pink #FFC0CB body text
+   10% accent — vivid purple #CC5AF2 for logo, headings, links, buttons
    Final copy/stats come from docs/hippo-website-pitch.md. */
 
 :root {
-  --bg: #5c4954;
-  --bg-raised: #705f69;
-  --bg-card: #695862;
-  --border: #8a7c84;
+  --bg: #291420;
+  --bg-raised: #3b1c2e;
+  --bg-card: #321827;
+  --border: #673251;
   --text: #ffc0cb;
   --text-dim: #ffc0cb;
-  --accent: #eccae9;
-  --accent-dim: #c8aac4;
+  --accent: #cc5af2;
+  --accent-dim: #b736e2;
   --maxw: 1120px;
 }
 
@@ -52,7 +54,7 @@ a:hover {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(92, 73, 84, 0.92);
+  background: rgba(41, 20, 32, 0.92);
   backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--border);
 }
@@ -180,7 +182,7 @@ nav.main-nav a[aria-current="page"] {
 }
 
 .btn-secondary:hover {
-  background: rgba(236, 202, 233, 0.14);
+  background: rgba(204, 90, 242, 0.16);
   text-decoration: none;
 }
 
