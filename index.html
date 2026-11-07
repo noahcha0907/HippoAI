@@ -1,131 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HIPPO — Weight-Spaced Repair for Clinical AI</title>
-    <link rel="stylesheet" href="assets/styles.css" />
-  </head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hippo</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="assets/rain.js" defer></script>
+    <script src="assets/parallax.js" defer></script>
+    <script src="assets/header.js" defer></script>
+</head>
   <body>
-    <header class="site-header">
-      <div class="wrap">
-        <a class="brand" href="index.html">
-          <span class="logo-slot">LOGO</span>
-          <span>HIPP<strong>O</strong></span>
-        </a>
-        <nav class="main-nav">
-          <ul>
-            <li><a href="index.html" aria-current="page">Home</a></li>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="demo.html">Demo</a></li>
-            <li><a href="mission.html">Mission</a></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
-
-    <main>
-      <!-- HERO -->
-      <section class="hero" style="border-top: none;">
-        <div class="logo-slot-lg">LOGO</div>
-        <h1>HIPPO</h1>
-        <p class="tagline">
-          A weight-spaced programming AI pipeline that repairs errors in small
-          clinical AI agents — [placeholder hero line, final copy in
-          docs/hippo-website-pitch.md].
-        </p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="demo.html">See the Demo</a>
-          <a class="btn btn-secondary" href="#evidence">View the Evidence</a>
-        </div>
-        <a class="scroll-cue" href="#evidence">
-          <span>Scroll for evidence &amp; stats</span>
-          <span>&#8595;</span>
-        </a>
-      </section>
-
-      <!-- EVIDENCE / STATISTICS -->
-      <section id="evidence">
-        <div class="wrap">
-          <div class="section-head">
-            <span class="eyebrow">Why It Matters</span>
-            <h2>Evidence &amp; Statistics</h2>
-            <p>
-              Placeholder metrics below — real figures and citations live in
-              docs/hippo-website-pitch.md.
-            </p>
+    <header class="site-header"><a class="brand" href="index.html" aria-label="Hippo home"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg" alt="" width="220" height="220"><span>Hippo</span></a><nav aria-label="Main navigation"><a href="index.html" aria-current="page">Home</a><a href="about.html">About Us</a><a href="demo.html">Demo</a><a href="mission.html">Mission</a></nav></header>
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="rain-field">
+          <canvas id="rain" role="img" aria-label="A five-column, three-row grid of animated impact ripples"></canvas>
+          <div class="field-grid" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
-
-          <div class="stats-grid">
-            <div class="stat-card">
+        </div>
+        <h1 id="hero-title"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg" alt="" width="220" height="220"><span>HIPPO</span></h1>
+      </section>
+      <p id="rain-status" role="status" hidden></p>
+<section id="evidence" class="original-content original-section">
+<h2>Evidence &amp; Statistics</h2>
+<div class="original-cards original-metrics"><article>
               <div class="stat-value">[XX%]</div>
-              <div class="stat-label">Reduction in clinical agent error rate</div>
-            </div>
-            <div class="stat-card">
+              <div class="stat-label">Reduction in clinical agent error rate</div></article><article>
               <div class="stat-value">[XX%]</div>
-              <div class="stat-label">Faster repair cycle vs. manual review</div>
-            </div>
-            <div class="stat-card">
+              <div class="stat-label">Faster repair cycle vs. manual review</div></article><article>
               <div class="stat-value">[N]</div>
-              <div class="stat-label">Clinical agent types validated against</div>
-            </div>
-            <div class="stat-card">
+              <div class="stat-label">Clinical agent types validated against</div></article><article>
               <div class="stat-value">[XX%]</div>
-              <div class="stat-label">Of flagged errors auto-repaired</div>
-            </div>
-          </div>
-
-          <div class="evidence-list">
-            <div class="evidence-item">
-              <strong>[Study / source placeholder 1]</strong> — one-line
-              finding supporting why small clinical AI agents need automated
-              repair.
-            </div>
-            <div class="evidence-item">
-              <strong>[Study / source placeholder 2]</strong> — one-line
-              finding on the cost or risk of unrepaired model drift/errors in
-              clinical settings.
-            </div>
-            <div class="evidence-item">
-              <strong>[Study / source placeholder 3]</strong> — one-line
-              finding on weight-space repair techniques vs. retraining.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- QUICK LINKS -->
-      <section>
-        <div class="wrap">
-          <div class="section-head">
-            <span class="eyebrow">Explore</span>
-            <h2>Learn More About HIPPO</h2>
-          </div>
-          <div class="card-grid">
-            <div class="card">
+              <div class="stat-label">Of flagged errors auto-repaired</div></article></div><div class="original-sources"><p><strong>[Study / source placeholder 1]</strong> — one-line finding supporting why small clinical AI agents need automated repair.</p><p><strong>[Study / source placeholder 2]</strong> — one-line finding on the cost or risk of unrepaired model drift/errors in clinical settings.</p><p><strong>[Study / source placeholder 3]</strong> — one-line finding on weight-space repair techniques vs. retraining.</p></div></section>
+<section class="original-content original-section"><h2>Learn More About HIPPO</h2><div class="original-cards"><article>
               <h3>About Us</h3>
               <p>Who's building HIPPO and why.</p>
               <a href="about.html">Go to About Us &rarr;</a>
-            </div>
-            <div class="card">
+            </article><article>
               <h3>Demo</h3>
               <p>Walk through HIPPO repairing a clinical agent live.</p>
               <a href="demo.html">Go to Demo &rarr;</a>
-            </div>
-            <div class="card">
+            </article><article>
               <h3>Mission</h3>
               <p>What we're trying to change in clinical AI safety.</p>
               <a href="mission.html">Go to Mission &rarr;</a>
-            </div>
-          </div>
-        </div>
-      </section>
+            </article></div></section>
     </main>
-
-    <footer class="site-footer">
-      <div class="wrap">
-        <p>&copy; 2026 HIPPO. Wireframe draft — content sourced from docs/hippo-website-pitch.md.</p>
-      </div>
-    </footer>
   </body>
 </html>
