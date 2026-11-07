@@ -1,0 +1,11 @@
+torch
+transformers>=5.22.2  # Older versions (4.57.6 tested) reject qwen3_5
+safetensors
+accelerate
+datasets
+numpy
+fastapi
+uvicorn
+pydantic
+pytest
+httpx

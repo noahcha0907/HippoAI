@@ -1,0 +1,48 @@
+{
+  "mock": true,
+  "id": "replaced-at-runtime",
+  "model_id": "replaced-at-runtime",
+  "complaint": "replaced-at-runtime",
+  "stage": "intake",
+  "elapsed_minutes": 42.0,
+  "forward_passes_used": 14,
+  "budget": { "max_minutes": 60, "max_forward_passes": 25 },
+  "located_regions": [
+    {
+      "tensor": "model.language_model.layers.15.mlp.down_proj.weight",
+      "rationale": "MOCK TEXT: placeholder explanation of why this region was named.",
+      "confidence": "high"
+    },
+    {
+      "tensor": "model.language_model.layers.19.mlp.down_proj.weight",
+      "rationale": "MOCK TEXT: placeholder explanation of why this region was named.",
+      "confidence": "medium"
+    }
+  ],
+  "attempts": [
+    {
+      "number": 1,
+      "summary": "MOCK TEXT: first attempted edit.",
+      "tensors_touched": ["model.language_model.layers.19.mlp.down_proj.weight"],
+      "weights_changed": 65536,
+      "weights_changed_pct": 0.0075,
+      "dev_metrics": { "clinical_accuracy": 0.41, "medmcqa_accuracy": 0.3, "random_control_accuracy": 0.4 },
+      "outcome": "rolled_back",
+      "reason": "MOCK TEXT: no better than the random control."
+    },
+    {
+      "number": 2,
+      "summary": "MOCK TEXT: second attempted edit.",
+      "tensors_touched": [
+        "model.language_model.layers.15.mlp.down_proj.weight",
+        "model.language_model.layers.19.mlp.down_proj.weight"
+      ],
+      "weights_changed": 131072,
+      "weights_changed_pct": 0.015,
+      "dev_metrics": { "clinical_accuracy": 0.58, "medmcqa_accuracy": 0.33, "random_control_accuracy": 0.4 },
+      "outcome": "accepted",
+      "reason": "MOCK TEXT: passed the dev gate."
+    }
+  ],
+  "is_replay": false
+}

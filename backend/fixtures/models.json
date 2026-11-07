@@ -1,0 +1,37 @@
+{
+  "mock": true,
+  "models": [
+    {
+      "id": "c1-a",
+      "label": "MOCK: 3-bit, one layer",
+      "damage_type": "compression_targeted",
+      "description": "Placeholder: one tensor harshly quantized.",
+      "base_model": "Qwen/Qwen3.5-0.8B",
+      "num_parameters": 873438784
+    },
+    {
+      "id": "c1-b",
+      "label": "MOCK: 4-bit, four layers",
+      "damage_type": "compression_targeted",
+      "description": "Placeholder: four tensors quantized.",
+      "base_model": "Qwen/Qwen3.5-0.8B",
+      "num_parameters": 873438784
+    },
+    {
+      "id": "c1-c",
+      "label": "MOCK: 5-bit, eight layers",
+      "damage_type": "compression_targeted",
+      "description": "Placeholder: eight tensors lightly quantized.",
+      "base_model": "Qwen/Qwen3.5-0.8B",
+      "num_parameters": 873438784
+    },
+    {
+      "id": "c0",
+      "label": "MOCK: undamaged control",
+      "damage_type": "control",
+      "description": "Placeholder: unmodified model. The loop should find nothing to fix.",
+      "base_model": "Qwen/Qwen3.5-0.8B",
+      "num_parameters": 873438784
+    }
+  ]
+}

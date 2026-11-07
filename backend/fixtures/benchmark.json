@@ -1,0 +1,41 @@
+{
+  "mock": true,
+  "rows": [
+    {
+      "case": "MOCK C1",
+      "method": "fixer_repair",
+      "broken_accuracy": 0.4,
+      "repaired_accuracy": 0.6,
+      "clean_accuracy": 0.7,
+      "recovery": 0.67,
+      "collateral_loss": 0.005,
+      "weights_changed_pct": 0.015,
+      "minutes": 42.0,
+      "passed": true
+    },
+    {
+      "case": "MOCK C1",
+      "method": "direction_removal",
+      "broken_accuracy": 0.4,
+      "repaired_accuracy": 0.45,
+      "clean_accuracy": 0.7,
+      "recovery": 0.17,
+      "collateral_loss": 0.02,
+      "weights_changed_pct": 0.015,
+      "minutes": 3.0,
+      "passed": false
+    },
+    {
+      "case": "MOCK C1",
+      "method": "random_edit",
+      "broken_accuracy": 0.4,
+      "repaired_accuracy": 0.4,
+      "clean_accuracy": 0.7,
+      "recovery": 0.0,
+      "collateral_loss": 0.01,
+      "weights_changed_pct": 0.015,
+      "minutes": 1.0,
+      "passed": false
+    }
+  ]
+}
