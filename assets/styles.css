@@ -1,16 +1,16 @@
 /* HIPPO site wireframe — shared styles
-   Brand base: dark ground (#1f1f1f) + orange accent (#ff9900), carried over from the
-   original index.html placeholder. Final copy/stats come from docs/hippo-website-pitch.md. */
+   HIPPO palette: dark purple background, light purple for logo/accent, blue for text.
+   Final copy/stats come from docs/hippo-website-pitch.md. */
 
 :root {
-  --bg: #1f1f1f;
-  --bg-raised: #2a2a2a;
-  --bg-card: #292929;
-  --border: #3d3d3d;
-  --text: #f1f1f1;
-  --text-dim: #b8b8b8;
-  --accent: #ff9900;
-  --accent-dim: #cc7a00;
+  --bg: #1e1033;
+  --bg-raised: #2a1b4a;
+  --bg-card: #271843;
+  --border: #42295f;
+  --text: #9fc2ff;
+  --text-dim: #7d93c9;
+  --accent: #b98ef2;
+  --accent-dim: #9a6edb;
   --maxw: 1120px;
 }
 
@@ -51,7 +51,7 @@ a:hover {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(31, 31, 31, 0.92);
+  background: rgba(30, 16, 51, 0.92);
   backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--border);
 }
@@ -165,7 +165,7 @@ nav.main-nav a[aria-current="page"] {
 
 .btn-primary {
   background: var(--accent);
-  color: #1f1f1f;
+  color: var(--bg);
 }
 
 .btn-primary:hover {
@@ -179,7 +179,7 @@ nav.main-nav a[aria-current="page"] {
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 153, 0, 0.1);
+  background: rgba(185, 142, 242, 0.12);
   text-decoration: none;
 }
 
