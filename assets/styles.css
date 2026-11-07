@@ -76,13 +76,14 @@ a:hover {
 .brand .logo-slot {
   width: 36px;
   height: 36px;
-  border: 2px dashed var(--accent);
-  border-radius: 8px;
   display: grid;
   place-items: center;
-  font-size: 0.6rem;
-  color: var(--accent);
   flex-shrink: 0;
+}
+
+.brand .logo-slot img {
+  width: 100%;
+  height: 100%;
 }
 
 .brand strong {
@@ -131,13 +132,14 @@ nav.main-nav a:hover {
 .hero .logo-slot-lg {
   width: 96px;
   height: 96px;
-  border: 2px dashed var(--accent);
-  border-radius: 16px;
   display: grid;
   place-items: center;
-  color: var(--accent);
-  font-size: 0.75rem;
   margin-bottom: 24px;
+}
+
+.hero .logo-slot-lg img {
+  width: 100%;
+  height: 100%;
 }
 
 .hero h1 {
