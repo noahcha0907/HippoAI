@@ -1,0 +1,44 @@
+{
+  "mock": true,
+  "id": "replaced-at-runtime",
+  "outcome": "repaired",
+  "cause": "MOCK TEXT: placeholder plain-English cause. Not a real finding.",
+  "broken": { "clinical_accuracy": 0.4, "unsafe_answer_rate": 0.3, "medmcqa_accuracy": 0.3 },
+  "repaired": { "clinical_accuracy": 0.6, "unsafe_answer_rate": 0.15, "medmcqa_accuracy": 0.33 },
+  "clean": { "clinical_accuracy": 0.7, "unsafe_answer_rate": 0.1, "medmcqa_accuracy": 0.35 },
+  "recovery": 0.67,
+  "recovery_ci95": [0.5, 0.8],
+  "collateral_loss": 0.005,
+  "weights_changed": 131072,
+  "weights_changed_pct": 0.015,
+  "tensors_touched": [
+    "model.language_model.layers.15.mlp.down_proj.weight",
+    "model.language_model.layers.19.mlp.down_proj.weight"
+  ],
+  "same_format_as_broken": true,
+  "claims": [
+    {
+      "text": "MOCK TEXT: a claim the validator confirmed.",
+      "verified": true,
+      "evidence": "MOCK TEXT: placeholder evidence."
+    },
+    {
+      "text": "MOCK TEXT: a claim the validator couldn't confirm.",
+      "verified": false,
+      "evidence": "MOCK TEXT: placeholder evidence."
+    }
+  ],
+  "remaining_failures": ["MOCK TEXT: a category that still fails."],
+  "examples": [
+    {
+      "question": "MOCK TEXT: placeholder triage question.",
+      "broken_answer": "MOCK TEXT: wrong answer.",
+      "repaired_answer": "MOCK TEXT: right answer.",
+      "expected_answer": "MOCK TEXT: right answer."
+    }
+  ],
+  "minutes": 42.0,
+  "forward_passes": 14,
+  "tokens": 500000,
+  "disclaimer": "Research prototype with deliberately damaged models. Not for clinical use. Outputs aren't medical advice."
+}

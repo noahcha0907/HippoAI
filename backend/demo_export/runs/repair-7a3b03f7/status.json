@@ -1,0 +1,78 @@
+{
+  "mock": false,
+  "id": "repair-7a3b03f7",
+  "model_id": "t2-a",
+  "complaint": "It's giving wrong answers on clinical triage and dosing questions.",
+  "stage": "awaiting_decision",
+  "elapsed_minutes": 131.48,
+  "forward_passes_used": 2,
+  "budget": {
+    "max_minutes": 25,
+    "max_forward_passes": 12
+  },
+  "located_regions": [],
+  "attempts": [
+    {
+      "number": 1,
+      "summary": "Rank-1 edit on layer 14 MLP down_proj to remove the component of the MLP output along the mean output direction for the mean input. This targets the strongest component (layer 14 MLP) which pushes toward answer B with strength ~5.88.",
+      "tensors_touched": [
+        "model.language_model.layers.14.mlp.down_proj.weight"
+      ],
+      "weights_changed": 2197091,
+      "weights_changed_pct": 0.1984249307483227,
+      "dev_metrics": {
+        "clinical_accuracy": 0.82,
+        "broken_clinical_accuracy": 0.66,
+        "random_control_accuracy": 0.65,
+        "collateral_loss": 0.08,
+        "random_control_collateral": 0.01,
+        "general_net_change": 0.023333333333333317,
+        "medmcqa_accuracy": null
+      },
+      "outcome": "rolled_back",
+      "reason": "Collateral loss 0.080 exceeds a random edit's 0.010 by more than 0.020"
+    },
+    {
+      "number": 2,
+      "summary": "Rank-1 edit on layer 14 MLP down_proj with 50% reduction of the projection onto the mean output direction. This targets the strongest B-bias component (layer 14 MLP pushes toward B with strength ~5.88) while preserving half the original signal to avoid collateral damage.",
+      "tensors_touched": [
+        "model.language_model.layers.14.mlp.down_proj.weight"
+      ],
+      "weights_changed": 1935705,
+      "weights_changed_pct": 0.1748184898004598,
+      "dev_metrics": {
+        "clinical_accuracy": 0.79,
+        "broken_clinical_accuracy": 0.66,
+        "random_control_accuracy": 0.65,
+        "collateral_loss": 0.05,
+        "random_control_collateral": 0.0033333333333333335,
+        "general_net_change": 0.0033333333333332993,
+        "medmcqa_accuracy": null
+      },
+      "outcome": "rolled_back",
+      "reason": "Collateral loss 0.050 exceeds a random edit's 0.003 by more than 0.020"
+    },
+    {
+      "number": 3,
+      "summary": "Rank-1 edit on layer 14 MLP down_proj with 30% reduction of the projection onto the mean output direction. Gentler edit to avoid collateral damage while still reducing the B bias from layer 14 MLP.",
+      "tensors_touched": [
+        "model.language_model.layers.14.mlp.down_proj.weight"
+      ],
+      "weights_changed": 1560800,
+      "weights_changed_pct": 0.1409598564246916,
+      "dev_metrics": {
+        "clinical_accuracy": 0.78,
+        "broken_clinical_accuracy": 0.66,
+        "random_control_accuracy": 0.65,
+        "collateral_loss": 0.04,
+        "random_control_collateral": 0.006666666666666667,
+        "general_net_change": -0.010000000000000009,
+        "medmcqa_accuracy": null
+      },
+      "outcome": "rolled_back",
+      "reason": "Collateral loss 0.040 exceeds a random edit's 0.007 by more than 0.020"
+    }
+  ],
+  "is_replay": true,
+  "error": null
+}

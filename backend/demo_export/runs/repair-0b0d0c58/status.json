@@ -1,0 +1,79 @@
+{
+  "mock": false,
+  "id": "repair-0b0d0c58",
+  "model_id": "t2-a",
+  "complaint": "It's giving wrong answers on clinical triage and dosing questions.",
+  "stage": "awaiting_decision",
+  "elapsed_minutes": 183.23,
+  "forward_passes_used": 2,
+  "budget": {
+    "max_minutes": 25,
+    "max_forward_passes": 12
+  },
+  "located_regions": [],
+  "attempts": [
+    {
+      "number": 1,
+      "summary": "Rank-1 edit to layer 14 MLP down_proj to remove strong push toward answer B (token 33). The layer was pushing logits toward B by ~5.9 on average. The edit removes this component along the mean input direction.",
+      "tensors_touched": [
+        "model.language_model.layers.14.mlp.down_proj.weight"
+      ],
+      "weights_changed": 1597250,
+      "weights_changed_pct": 0.1442517495350709,
+      "dev_metrics": {
+        "clinical_accuracy": 0.77,
+        "broken_clinical_accuracy": 0.66,
+        "random_control_accuracy": 0.65,
+        "collateral_loss": 0.043333333333333335,
+        "random_control_collateral": null,
+        "general_net_change": null,
+        "medmcqa_accuracy": null
+      },
+      "outcome": "rolled_back",
+      "reason": "Collateral loss 0.043 exceeds 0.010"
+    },
+    {
+      "number": 2,
+      "summary": "Two rank-1 edits at 30% strength: (1) Layer 14 MLP down_proj to reduce push toward B, (2) Layer 22 linear attention out_proj to reduce push toward B. Both layers were top contributors to B bias in logit attribution.",
+      "tensors_touched": [
+        "model.language_model.layers.14.mlp.down_proj.weight",
+        "model.language_model.layers.22.linear_attn.out_proj.weight"
+      ],
+      "weights_changed": 1000596,
+      "weights_changed_pct": 0.09036639447662782,
+      "dev_metrics": {
+        "clinical_accuracy": 0.79,
+        "broken_clinical_accuracy": 0.66,
+        "random_control_accuracy": 0.67,
+        "collateral_loss": 0.043333333333333335,
+        "random_control_collateral": null,
+        "general_net_change": null,
+        "medmcqa_accuracy": null
+      },
+      "outcome": "rolled_back",
+      "reason": "Collateral loss 0.043 exceeds 0.010"
+    },
+    {
+      "number": 3,
+      "summary": "Rank-1 edit at 10% strength on layer 14 MLP down_proj to reduce push toward B. Minimal change to weight matrix (Frobenius norm 0.009).",
+      "tensors_touched": [
+        "model.language_model.layers.14.mlp.down_proj.weight"
+      ],
+      "weights_changed": 335024,
+      "weights_changed_pct": 0.03025687784394277,
+      "dev_metrics": {
+        "clinical_accuracy": 0.65,
+        "broken_clinical_accuracy": 0.66,
+        "random_control_accuracy": 0.65,
+        "collateral_loss": 0.01,
+        "random_control_collateral": null,
+        "general_net_change": null,
+        "medmcqa_accuracy": null
+      },
+      "outcome": "rolled_back",
+      "reason": "Clinical gain -0.010 is below 0.030; Only 0.000 better than a random edit of the same size; No dose-response: the half-strength edit isn't between broken and full strength"
+    }
+  ],
+  "is_replay": true,
+  "error": null
+}

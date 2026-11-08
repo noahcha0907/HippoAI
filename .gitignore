@@ -1,1 +1,14 @@
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+# Model weights and run outputs never go in git
+*.safetensors
+*.bin
+*.pt
+*.npy
+backend/artifacts/
+backend/runs/
 /kairo/

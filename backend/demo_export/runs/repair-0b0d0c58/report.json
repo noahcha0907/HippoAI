@@ -1,0 +1,41 @@
+{
+  "mock": false,
+  "id": "repair-0b0d0c58",
+  "outcome": "could_not_repair_safely",
+  "cause": "The model has a strong systematic bias toward answering \"B\" on clinical questions (61% of responses vs. ~14% correct), driven primarily by layer 14's MLP and layer 22's linear attention pushing logits toward the B token. I attempted rank-1 edits to subtract the B-pushing component from these layers at 10–30% strength, but every edit either caused unacceptable collateral damage on other tasks (>1% accuracy loss) or failed to raise clinical accuracy meaningfully. The B-bias appears distributed across multiple components in a way that can't be cleanly isolated with small targeted weight changes. I didn't confirm any safe repair that improves clinical performance without degrading other capabilities.",
+  "broken": {
+    "clinical_accuracy": 0.65,
+    "unsafe_answer_rate": 0.2222,
+    "medmcqa_accuracy": 0.286
+  },
+  "repaired": {
+    "clinical_accuracy": 0.65,
+    "unsafe_answer_rate": 0.2222,
+    "medmcqa_accuracy": 0.286
+  },
+  "clean": {
+    "clinical_accuracy": 0.78,
+    "unsafe_answer_rate": 0.2,
+    "medmcqa_accuracy": 0.356
+  },
+  "recovery": 0.0,
+  "recovery_ci95": [
+    0.0,
+    0.0
+  ],
+  "collateral_loss": 0.0,
+  "weights_changed": 0,
+  "weights_changed_pct": 0.0,
+  "tensors_touched": [],
+  "same_format_as_broken": true,
+  "claims": [],
+  "remaining_failures": [
+    "diagnosis: 16% below the clean model",
+    "triage: 20% below the clean model"
+  ],
+  "examples": [],
+  "minutes": 11.79,
+  "forward_passes": 8,
+  "tokens": 456021,
+  "disclaimer": "Research prototype with deliberately damaged models. Not for clinical use. Outputs aren't medical advice. Questions haven't been clinically reviewed."
+}

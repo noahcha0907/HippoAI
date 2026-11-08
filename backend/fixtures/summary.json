@@ -1,0 +1,32 @@
+{
+  "mock": true,
+  "repair_id": "replaced-at-runtime",
+  "model_id": "t2-a",
+  "complaint": "MOCK TEXT: placeholder complaint.",
+  "outcome": "repaired",
+  "cause": "MOCK TEXT: placeholder cause.",
+  "accuracy": { "broken": 0.65, "repaired": 0.75, "clean": 0.78 },
+  "unsafe_answer_rate": { "broken": 0.22, "repaired": 0.2, "clean": 0.2 },
+  "recovery": 0.77,
+  "recovery_ci95": [0.5, 1.0],
+  "sealed_questions_note": "Scored on held-out questions the fixer never saw.",
+  "edit": {
+    "tensors_touched": ["model.language_model.layers.14.mlp.down_proj.weight"],
+    "weights_changed": 1597250,
+    "weights_changed_pct": 0.14
+  },
+  "attempts": { "total": 3, "accepted": 1, "rolled_back": 2 },
+  "best_attempt": {
+    "number": 2,
+    "outcome": "accepted",
+    "dev_accuracy": 0.77,
+    "broken_dev_accuracy": 0.66,
+    "random_control_accuracy": 0.65,
+    "reason": "Passed the dev gate"
+  },
+  "minutes": 12.0,
+  "tokens": 500000,
+  "is_replay": true,
+  "gate_note": "MOCK TEXT: gate changes are listed in the backend README.",
+  "disclaimer": "Research prototype with deliberately damaged models. Not for clinical use."
+}

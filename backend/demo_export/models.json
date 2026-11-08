@@ -1,0 +1,45 @@
+{
+  "mock": false,
+  "models": [
+    {
+      "id": "c0",
+      "label": "Undamaged control",
+      "damage_type": "control",
+      "description": "Unmodified model.",
+      "base_model": "Qwen/Qwen3.5-0.8B",
+      "num_parameters": 873438784
+    },
+    {
+      "id": "c1-a",
+      "label": "3-bit compression, one layer",
+      "damage_type": "compression_targeted",
+      "description": "Deliberately damaged copy for testing repairs.",
+      "base_model": "Qwen/Qwen3.5-0.8B",
+      "num_parameters": 873438784
+    },
+    {
+      "id": "c1-b",
+      "label": "4-bit compression, four layers",
+      "damage_type": "compression_targeted",
+      "description": "Deliberately damaged copy for testing repairs.",
+      "base_model": "Qwen/Qwen3.5-0.8B",
+      "num_parameters": 873438784
+    },
+    {
+      "id": "c1-c",
+      "label": "5-bit compression, eight layers",
+      "damage_type": "compression_targeted",
+      "description": "Deliberately damaged copy for testing repairs.",
+      "base_model": "Qwen/Qwen3.5-0.8B",
+      "num_parameters": 873438784
+    },
+    {
+      "id": "t2-a",
+      "label": "Training error: learned answer shortcut",
+      "damage_type": "training_error",
+      "description": "Deliberately damaged copy for testing repairs.",
+      "base_model": "Qwen/Qwen3.5-0.8B",
+      "num_parameters": 873438784
+    }
+  ]
+}
