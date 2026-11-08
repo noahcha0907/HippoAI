@@ -1991,3 +1991,27 @@ nav a {
     font-size:13px;
   }
 }
+
+/* Reading-order character wipes track scroll position without timed transitions. */
+[data-scroll-highlight] .reading-word {
+  display:inline-block;
+  white-space:nowrap;
+}
+[data-scroll-highlight] .reading-space {
+  white-space:pre-wrap;
+}
+[data-scroll-highlight] .reading-character {
+  position:relative;
+  color:#fff;
+  background:linear-gradient(
+    to right,
+    transparent var(--read, 0%),
+    var(--marker-color) var(--read, 0%)
+  );
+}
+@media(prefers-reduced-motion:reduce) {
+  [data-scroll-highlight] .reading-character {
+    background:none;
+    color:#000 !important;
+  }
+}
