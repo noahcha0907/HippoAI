@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.uv-cache/
+.hf-cache/
+.env
+data/
+runs/
+eeg-runs/
+eeg-data/
+models/
+dist/
