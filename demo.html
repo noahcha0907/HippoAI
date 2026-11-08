@@ -4,29 +4,89 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/svg+xml" href="assets/hippo-logo-pink-filled.svg?v=355af9359596">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Explore Hippo’s proposed Audit, Repair, Validate, Report workflow in an illustrative walkthrough.">
+    <meta name="description" content="Explore real EEG shortcut-repair results and a separate recorded clinical-model demo, with edit histories and final comparisons.">
     <title>Demo — Hippo</title>
     <link rel="stylesheet" href="assets/styles.css?v=0c13f833f2df">
     <link rel="stylesheet" href="assets/live-demo.css?v=1">
     <script src="assets/header.js?v=be2eb2310638" defer></script>
-    <script src="assets/walkthrough.js?v=5bd6b80432ce" defer></script>
-    <script src="assets/scroll-highlights.js?v=b1e8af2900aa" defer></script>
+      <script src="assets/scroll-highlights.js?v=b1e8af2900aa" defer></script>
     <script src="assets/section-reveal.js?v=efe101bc3adf" defer></script>
     <script src="assets/live-demo.js?v=2" defer></script>
-  </head>
-  <body>
+    <link rel="stylesheet" href="assets/demo.css?v=run6">
+  <script src="assets/demo-data.js?v=run6" defer></script>
+  <script src="assets/demo.js?v=run6" defer></script>
+</head>
+<body class="replay-page">
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Hippo home"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg?v=355af9359596" alt="" width="220" height="220"><span>Hippo</span></a>
-    <nav aria-label="Main navigation">
-        <a href="index.html">Home</a>
-        <a href="about.html">About Us</a>
-        <a href="demo.html" aria-current="page">Demo</a>
-        <a href="pitch.html">Pitch</a>
-    </nav>
+    <nav aria-label="Main navigation"><a href="index.html">Home</a><a href="about.html">About Us</a><a href="demo.html" aria-current="page">Demo</a><a href="pitch.html">Pitch</a></nav>
   </header>
-    <main id="main" class="content-site">
-<section class="page-masthead content-masthead"><h1>Demo</h1><h2 data-scroll-highlight>Ask. Repair. Ask again.</h2><p>A small clinical model was deliberately damaged. Ask it a triage question, watch Hippo diagnose and edit its weights, then ask the same question again. Every answer and number below comes from a real recorded run.</p></section>
+  <main id="main">
+    <section class="replay-hero">
+      <div class="replay-eyebrow"><span class="status-dot"></span> THE EXPERIMENT ROOM <span class="mode-label">Saved evidence replay</span></div>
+      <h1>A small edit.<br>A testable difference.</h1>
+      <div class="hero-bottom-line"><p>Real EEG recordings. Planted shortcuts. Small weight edits tested against controls. Explore the completed run6 experiment and its limits.</p><a href="#replay" class="jump-link">Explore the evidence <span aria-hidden="true">↓</span></a></div>
+    </section>
+    <section class="replay-shell" id="replay" aria-label="EEG experiment replay">
+      <div class="replay-topbar"><span class="mono">HIPPO / EEG AUDIT</span><span id="source-badge" class="source-badge">Awaiting evidence</span></div>
+      <div class="evidence-loader">
+        <div><span class="small-label">RECORDED EXPERIMENT / RUN6</span><h2 id="loader-title">Opening the recorded experiment.</h2><p id="loader-description">Run6 loads automatically. You can also open another report or extracted evidence folder. <a href="assets/evidence/run6/provenance.json">View run6 provenance &nearr;</a></p></div>
+        <div class="load-actions"><button class="action-button primary" id="load-bundled" type="button">Load run6 results &nearr;</button><button class="action-button secondary" id="open-report" type="button">Open a saved report <span aria-hidden="true">↗</span></button><button class="action-button secondary" id="open-folder" type="button">Choose evidence folder</button><span class="local-note">Read locally in your browser. No upload or API call.</span></div>
+        <input type="file" id="report-file" accept=".json,application/json" hidden>
+        <input type="file" id="evidence-folder" webkitdirectory multiple hidden>
+      </div>
+      <p id="load-message" class="load-message" role="status" aria-live="polite"></p>
+      <noscript><p class="notice">Enable JavaScript to open a saved report and navigate its results.</p></noscript>
+      <div id="empty-state" class="empty-state">
+        <div class="empty-visual" aria-hidden="true"><span class="signal-label">INPUT → INSPECTION → TEST</span><svg viewBox="0 0 600 110" focusable="false"><path class="signal-grid" d="M0 25H600M0 55H600M0 85H600M50 0V110M150 0V110M250 0V110M350 0V110M450 0V110M550 0V110"/><path class="signal-wave" d="M0 55H40L49 45L58 65L68 55H104L115 32L125 77L137 55H172L190 53L204 14L219 94L234 55H276L288 45L298 65L310 55H352L365 36L379 72L393 55H431L442 44L454 66L468 55H512L523 39L535 71L547 55H600"/></svg><span class="signal-label">Schematic illustration · no recorded EEG displayed</span></div>
+        <div class="empty-copy"><span class="small-label">A REPLAY, GROUNDED IN A RUN</span><h3>The result can be a repair.<br>It can also be a rejection.</h3><p>Load the included run6 results or open another saved run to explore diagnoses, accepted and rejected edits, and final comparisons.</p><p class="empty-help">Need a run first? <a href="backend/docs/EEG_EXPERIMENT.md">Open the Colab experiment guide ↗</a></p></div>
+      </div>
+      <div id="workspace" hidden>
+        <section id="run-overview" class="run-overview" aria-labelledby="overview-title"><span class="small-label">THE RESULT / ALL ASTRA COMPARISONS</span><h2 id="overview-title">A small, measurable signal.</h2><div id="overview-stats" class="summary-strip"></div><p id="overview-note"></p><div class="results-table-wrap" tabindex="0" role="region" aria-label="Astra final results across training seeds"><table class="results-table"><caption>Final changes versus each model's unchanged checkpoint &middot; percentage points</caption><thead><tr><th scope="col">Model / method</th><th scope="col">Swapped accuracy</th><th scope="col">Clean accuracy</th><th scope="col">Artifact flips</th><th scope="col">All four criteria</th></tr></thead><tbody id="overview-results"></tbody></table></div><p class="detail-note">A = weights and architecture. B = weights plus frequency and spatial views. Comparisons share trials; seeds and A/B audits are not independent subjects.</p></section>
+<div id="run-warning" class="notice" hidden></div>
+        <div class="selection-bar">
+          <label>Model <select id="model-select" aria-label="Select recorded EEG model"></select></label>
+          <label>Comparison <select id="method-select" aria-label="Select recorded repair or comparator"></select></label>
+          <div class="replay-actions"><button type="button" id="play-replay" class="action-button small">Play replay ▷</button><button type="button" id="save-replay" class="text-button">Save replay ↓</button><button type="button" id="clear-replay" class="text-button">Clear</button></div>
+        </div>
+        <div class="replay-stage-buttons" role="group" aria-label="Choose replay stage">
+          <button type="button" data-stage="0" aria-pressed="true" aria-controls="replay-audit"><span>01</span> Audit</button>
+          <button type="button" data-stage="1" aria-pressed="false" aria-controls="replay-repair"><span>02</span> Repair</button>
+          <button type="button" data-stage="2" aria-pressed="false" aria-controls="replay-validate"><span>03</span> Validate</button>
+          <button type="button" data-stage="3" aria-pressed="false" aria-controls="replay-report"><span>04</span> Report</button>
+        </div>
+        <section id="replay-audit" class="replay-panel" aria-labelledby="audit-title">
+          <div class="stage-heading"><span class="small-label">01 / AUDIT</span><h2 id="audit-title">What did the auditor see?</h2><p>The first diagnosis was recorded before repair feedback. The planted condition is revealed here for comparison.</p></div>
+<div class="audit-grid">
+  <article class="diagnosis-card"><div class="card-top"><span class="small-label" id="diagnosis-source">Recorded diagnosis</span><span id="diagnosis-result" class="badge"></span></div><h3 id="diagnosis-name"></h3><p id="diagnosis-description"></p><blockquote id="diagnosis-hypothesis"></blockquote><dl id="diagnosis-facts" class="compact-facts"></dl></article>
+  <div><div class="section-label">EXPERIMENT CONTEXT</div><dl id="model-facts" class="context-facts"></dl><div id="gate-result" class="gate-result"></div></div>
+</div>
+<div class="dev-comparison"><div><span class="small-label">DEVELOPMENT CHECK</span><h3>Does changing the cue change accuracy?</h3><p>Same task, different artifact association. These observations informed eligibility; they are not final-test results.</p></div><div id="audit-bars" class="metric-bars"></div></div>
+        </section>
+        <section id="replay-repair" class="replay-panel" aria-labelledby="repair-title" hidden>
+          <div class="stage-heading"><span class="small-label">02 / REPAIR</span><h2 id="repair-title">Keep the edit. Or keep the original.</h2><p>Candidate edits were selected using development data. Each rejection preserves the previously accepted checkpoint.</p></div>
+<div id="repair-summary" class="summary-strip"></div><p id="repair-note" class="detail-note"></p>
+<div class="section-label">RECORDED EDIT HISTORY</div><div id="edit-history" class="edit-history"></div>
+<div class="repair-rule"><span aria-hidden="true">↳</span><p>For bounded repairs: improve swapped accuracy, reduce artifact-driven flips, and preserve clean and worst-condition performance relative to the original.</p></div>
+        </section>
+        <section id="replay-validate" class="replay-panel" aria-labelledby="validate-title" hidden>
+          <div class="stage-heading"><span class="small-label">03 / VALIDATE</span><h2 id="validate-title">Let the final session speak.</h2><p id="validation-context">All methods were selected before this run's final scoring. Subject 1's final session had been inspected in a previous run, so this follow-up is exploratory.</p></div>
+<div id="validation-missing" class="notice" hidden></div>
+<div id="validation-results"><div id="outcome" class="outcome"></div><div id="delta-cards" class="delta-cards"></div><div class="chart-heading"><h3>Accuracy across four conditions</h3><div class="legend"><span><i class="original-swatch"></i>Original model</span><span><i class="selected-swatch"></i>Selected comparison</span></div></div><div id="final-chart" class="final-chart"></div><p class="detail-note">Each condition reuses the same base trials. “Clean” means no planted artifact. Conditions and training seeds are not independent subjects.</p></div>
+        </section>
+        <section id="replay-report" class="replay-panel" aria-labelledby="report-title" hidden>
+          <div class="stage-heading"><span class="small-label">04 / REPORT</span><h2 id="report-title">The whole comparison, on record.</h2><p>Keep the controls in view. A small edit earns its place through measured performance.</p></div>
+<dl id="run-facts" class="run-facts"></dl>
+<div class="results-table-wrap" tabindex="0" role="region" aria-label="Final results for the selected model"><table class="results-table"><caption>Final session · selected model · all recorded methods</caption><thead><tr><th scope="col">Method</th><th scope="col">Original cue</th><th scope="col">Clean</th><th scope="col">Swapped cue</th><th scope="col">Uniform cue</th><th scope="col">Artifact flips</th><th scope="col">Accepted edits</th></tr></thead><tbody id="results-body"></tbody></table></div>
+<p id="report-caveat" class="detail-note"></p><details class="evidence-details"><summary>Inspect the recorded evidence</summary><pre id="evidence-detail"></pre></details>
+        </section>
+        <div class="replay-navigation"><button id="previous-stage" type="button">← Previous</button><p id="stage-status" role="status" aria-live="polite">Audit · 1 of 4</p><button id="next-stage" type="button">Next: Repair →</button></div>
+      </div>
+      <div class="replay-footnote"><span id="run-caption">Your evidence stays in this browser tab.</span><span>Recorded results · no live training</span></div>
+    </section>
+    <section class="demo-context"><div><span class="small-label">WHY EEG?</span><h2>A shortcut we can<br>actually test.</h2></div><div><p>We deliberately correlate an artifact with a label in a small EEG classifier. Then we change or remove that cue and measure what happens.</p><p>Astra inspects the weights, proposes a diagnosis, and may suggest a bounded edit. Unchanged models, random edits, signal rules, and input filtering provide comparison points.</p><p class="detail-note">This is a research experiment on planted shortcuts. It does not establish clinical safety or patient benefit.</p></div></section>
+  <section class="demo-context" id="clinical-replay"><div><span class="small-label">SEPARATE EXPERIMENT</span><h2>Clinical model replay.</h2></div><div><p>This recorded language-model repair is a different experiment from the EEG audit above. Its questions, model and metrics are separate.</p></div></section>
       <section class="live-demo" id="live-demo" aria-label="Recorded repair run">
         <div class="ld-head">
           <p class="ld-meta" aria-live="polite"><span>Loading run…</span></p>
@@ -63,24 +123,8 @@
           <div class="ld-scorecard" id="ld-scorecard" hidden></div>
         </div>
       </section>
-      <section class="content-section"><div class="content-heading"><h2 data-scroll-highlight>How the<br>pipeline works.</h2><p>The four stages behind the run above, as an illustrative walkthrough.</p></div></section>
-      <section class="walkthrough" aria-label="Interactive pipeline walkthrough">
-        <div class="walkthrough-controls" hidden><div class="stage-buttons" role="group" aria-label="Choose a stage"><button type="button" data-step="0" aria-controls="step-audit" aria-pressed="true">Audit</button><button type="button" data-step="1" aria-controls="step-repair" aria-pressed="false">Repair</button><button type="button" data-step="2" aria-controls="step-validate" aria-pressed="false">Validate</button><button type="button" data-step="3" aria-controls="step-report" aria-pressed="false">Report</button></div></div>
-        <div class="walkthrough-panels"><section class="walkthrough-panel" id="step-audit" aria-labelledby="stage-title-0"><div class="walkthrough-main"><span class="step-name">Audit</span><h2 id="stage-title-0">Find the failure.</h2><p class="walkthrough-summary">A correct answer changes when the user applies pressure. The first task is to investigate why.</p><p>Compare the model’s answer to a benchmark reference, then repeat the question with a misleading claim of expertise. Use those failures to guide inspection of the model’s weights.</p></div><dl class="walkthrough-facts"><div><dt>Input</dt><dd>A model, a known failure, and its task specification.</dd></div><div><dt>Output</dt><dd>A candidate explanation and weights to investigate.</dd></div><div><dt>Question</dt><dd>Does the evidence point to a specific failure mechanism?</dd></div></dl></section>
-<section class="walkthrough-panel" id="step-repair" aria-labelledby="stage-title-1"><div class="walkthrough-main"><span class="step-name">Repair</span><h2 id="stage-title-1">Make a targeted edit.</h2><p class="walkthrough-summary">The proposed repair changes a small part of the model, with every change recorded.</p><p>Create a candidate weight edit aimed at the identified failure. Retain the original model and an edit log so the candidate can be compared, rejected, or reversed.</p></div><dl class="walkthrough-facts"><div><dt>Input</dt><dd>The candidate mechanism and original model weights.</dd></div><div><dt>Output</dt><dd>An edited candidate and a record of its changes.</dd></div><div><dt>Question</dt><dd>Is the proposed change focused on the observed failure?</dd></div></dl></section>
-<section class="walkthrough-panel" id="step-validate" aria-labelledby="stage-title-2"><div class="walkthrough-main"><span class="step-name">Validate</span><h2 id="stage-title-2">Test beyond the example.</h2><p class="walkthrough-summary">Fixing the example is not enough. The edited model has to face independent tests.</p><p>Evaluate accuracy, susceptibility to misleading prompts, and performance on unaffected tasks. If the candidate fails the agreed checks, return to repair or reject it; do not promote it as a success.</p></div><dl class="walkthrough-facts"><div><dt>Input</dt><dd>The original and edited models, plus held-out tests.</dd></div><div><dt>Output</dt><dd>A comparison of the target behavior and regressions.</dd></div><div><dt>Question</dt><dd>Does the evidence justify keeping the edit?</dd></div></dl></section>
-<section class="walkthrough-panel" id="step-report" aria-labelledby="stage-title-3"><div class="walkthrough-main"><span class="step-name">Report</span><h2 id="stage-title-3">Explain what changed.</h2><p class="walkthrough-summary">Make the outcome legible to the people responsible for the workflow.</p><p>Describe the behaviors that improved or worsened, the potential clinical consequences, the edit history, and unresolved risks. The report supports review; it does not certify that a model is safe.</p></div><dl class="walkthrough-facts"><div><dt>Input</dt><dd>Independent evaluation results and the edit history.</dd></div><div><dt>Output</dt><dd>A report for technical and clinical review.</dd></div><div><dt>Question</dt><dd>What is the remaining risk, and what still needs testing?</dd></div></dl></section>
-</div>
-        <div class="walkthrough-navigation" hidden><button type="button" id="previous-stage">← Previous</button><p id="walkthrough-status" role="status" aria-live="polite">Audit stage selected</p><button type="button" id="next-stage">Next stage →</button></div>
-      </section>
-      <section class="content-split"><h2 data-scroll-highlight>A failed check<br>means another look.</h2><div class="prose"><p>The validation stage is a decision point. A candidate that improves one example but introduces new failures does not count as a successful repair.</p><p>The intended loop is repair, test independently, then either revise the edit or report the evidence for review. A small edit still needs a thorough evaluation.</p><div class="feedback-loop" aria-label="Repair leads to validation; failed checks return to repair"><span>Repair</span><span aria-hidden="true">⇄</span><span>Validate</span></div></div></section>
-      <section class="content-section green-section"><div class="content-heading"><h2 data-scroll-highlight>What a useful<br>report should explain.</h2><p>Three views of the same error, informed by the clinical-impact framework.</p></div><div class="principle-grid"><article><h3>Technical</h3><p>How often did the error occur? Compare accuracy, false positives, false negatives, and changes on independent test sets.</p></article><article><h3>Clinical context</h3><p>What did the model miss or misclassify? Describe the finding or behavior, rather than reporting only a score.</p></article><article><h3>Patient impact</h3><p>Could the error delay a diagnosis, trigger extra review, or change treatment? Make the interpretation and uncertainty explicit.</p></article></div><a class="source-link" href="https://www.nature.com/articles/s41746-024-01093-w">Evans &amp; Snead, 2024 ↗</a></section>
-      <section class="content-split"><h2 data-scroll-highlight>What we still<br>need to prove.</h2><div class="prose"><p>The cited research shows that weight inspection can detect sycophancy in small models. It does not yet establish that weight editing repairs clinical sycophancy.</p><p>That is the hypothesis Hippo aims to test. This walkthrough contains no measured Hippo outcomes.</p><a class="pill-link" href="pitch.html#evidence">Explore the research <span aria-hidden="true">↗</span></a></div></section>
 
-    </main>
-  <footer class="site-footer">
-    <a class="footer-brand" href="index.html" aria-label="Hippo home"><span class="footer-wordmark"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg?v=355af9359596" alt="" width="220" height="220"><span>Hippo</span></span><span aria-hidden="true">↗</span></a>
-    <div class="footer-meta"><span>© 2026 Hippo</span><span>Researching surgical repair for clinical AI.</span><a href="pitch.html#sources">Research &amp; sources ↗</a></div>
-  </footer>
-  </body>
+</main>
+  <footer class="site-footer"><a class="footer-brand" href="index.html" aria-label="Hippo home"><span class="footer-wordmark"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg?v=355af9359596" alt="" width="220" height="220"><span>Hippo</span></span><span aria-hidden="true">↗</span></a><div class="footer-meta"><span>© 2026 Hippo</span><span>Researching surgical repair for clinical AI.</span><a href="pitch.html#sources">Research &amp; sources ↗</a></div></footer>
+</body>
 </html>
