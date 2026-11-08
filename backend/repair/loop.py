@@ -32,12 +32,33 @@ Rules:
 - Edit as few weights as you can, and don't harm what already works.
 - The model may have no damage. If you find none, finish with "nothing_to_fix" and make no edits.
 
-Work like this: use forward_pass to see what fails, form a hypothesis about where, test it on the weights with
-run_python, write a candidate with save(name, array), queue it with save_edit, then call submit_attempt. Attempts
+Work like this: use forward_pass to see what fails. Use scan_tensors (weight statistics) and logit_attribution
+(which layers push which answer) to find candidate locations; both give leads, not proof. Test a hypothesis on the
+weights with run_python (mean_input saves a layer's typical input there), write a candidate with save(name, array),
+queue it with save_edit, then call submit_attempt.
+
+Repair playbook (general techniques; you decide whether any fits):
+- If one layer adds an unwanted push toward some output direction d (for example, toward one answer letter), a
+  targeted fix is a rank-1 edit that removes that push along the layer's typical input: with v = mean_input
+  normalized and d normalized, W_new = W - (d . W v) d v^T. This changes one tensor in one direction.
+- Prefer edits that remove a specific unwanted component over scaling whole rows or columns.
+- Rounded or quantized values usually can't be restored exactly; say so if that's the cause.
+
+How the gate judges side effects: general medical questions (MedMCQA) are asked in 4 answer orders, rotated
+so every option takes every letter once. Only questions the model gets right in at least 3 orders count as
+known. An edit fails if it loses more known questions than a random edit of the same size by over 2 points,
+or if the net score falls by over 1 point. Lucky letter guesses don't count, so removing a letter bias isn't
+penalised for flipping them; the forward_pass tool's raw MedMCQA score still includes those guesses. Attempts
 that fail the gate are rolled back, and the reasons are returned to you. Call finish when you're done, and say plainly
 what you did and didn't confirm. Finishing with "could_not_repair_safely" is an acceptable outcome.
 
 """ + ARCHITECTURE_NOTES
+
+FINAL_SUMMARY_PROMPT = (
+    "The run has ended ({reason}); no further tools are available and no edits were kept unless an attempt passed "
+    "the gate. In 2 to 4 plain sentences for a clinician, say what you think is wrong with the model, what you "
+    "tried, and what you didn't confirm."
+)
 
 HANDOFF_PROMPT = (
     "You're near the context limit. Write notes for a fresh copy of yourself: the hypothesis, evidence so far, "
@@ -106,6 +127,7 @@ def run_repair(
     stop_reason = ""
 
     def record(event: dict) -> None:
+        event = {"t": time.time(), **event}
         with log_path.open("a", encoding="utf-8") as log:
             log.write(json.dumps(event, ensure_ascii=False, default=str) + "\n")
         if on_event:
@@ -173,10 +195,21 @@ def run_repair(
     toolbox.session.rollback()
     outcome, said = _resolve_outcome(toolbox, stop_reason)
     conclusion = toolbox.conclusion
+    cause = conclusion.cause if conclusion else ""
+    if not conclusion and stop_reason != "fixer_error":
+        # Stopped by a limit: ask for a short explanation so the report isn't empty.
+        try:
+            final = client.chat(messages + [{"role": "user", "content": FINAL_SUMMARY_PROMPT.format(reason=stop_reason)}])
+            prompt_tokens += final.prompt_tokens
+            completion_tokens += final.completion_tokens
+            cause = (final.message.get("content") or "").strip()
+            record({"type": "final_summary", "text": cause})
+        except FixerError as error:
+            record({"type": "fixer_error", "error": str(error)})
     result = RepairResult(
         outcome=outcome,
         stop_reason=stop_reason,
-        cause=conclusion.cause if conclusion else "The fixer didn't report a cause before stopping.",
+        cause=cause or "The fixer didn't report a cause before stopping.",
         located_regions=conclusion.located_regions if conclusion else [],
         claims=conclusion.claims if conclusion else [],
         attempts=toolbox.attempts,

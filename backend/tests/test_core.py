@@ -265,3 +265,40 @@ def test_score_questions_reads_last_position():
 @pytest.mark.parametrize("path", sorted((Path(__file__).parent.parent / "fixtures").glob("*.json")), ids=lambda p: p.stem)
 def test_every_fixture_is_marked_mock(path):
     assert json.loads(path.read_text(encoding="utf-8"))["mock"] is True
+
+
+def test_gate_accepts_values_exactly_at_thresholds_despite_rounding():
+    # 0.69 - 0.66 is 0.0299999... in floating point; the real run hit this.
+    scores_at_limit = AttemptScores(
+        broken_clinical=0.66, edited_clinical=0.69, random_control_clinical=0.67,
+        collateral_loss=0.01, half_strength_clinical=0.675,
+    )
+    assert evaluate_gate(scores_at_limit) == (True, [])
+
+
+def noisy(**overrides):
+    values = dict(
+        broken_clinical=0.66, edited_clinical=0.77, random_control_clinical=0.65, collateral_loss=0.043,
+        half_strength_clinical=0.72, general_net_change=0.02, random_control_collateral=0.035,
+    )
+    return AttemptScores(**{**values, **overrides})
+
+
+def test_gate_accepts_churn_similar_to_a_random_edit():
+    # The real t2-a attempt: 4.3% churn on a near-chance set, net score up.
+    assert evaluate_gate(noisy()) == (True, [])
+
+
+def test_gate_rejects_churn_well_beyond_a_random_edit():
+    accepted, reasons = evaluate_gate(noisy(collateral_loss=0.09))
+    assert not accepted and any("random edit's" in r for r in reasons)
+
+
+def test_gate_rejects_a_falling_general_score():
+    accepted, reasons = evaluate_gate(noisy(general_net_change=-0.03))
+    assert not accepted and any("fell by" in r for r in reasons)
+
+
+def test_gate_uses_absolute_limit_without_a_random_comparison():
+    accepted, reasons = evaluate_gate(noisy(random_control_collateral=None))
+    assert not accepted and any("exceeds 0.010" in r for r in reasons)

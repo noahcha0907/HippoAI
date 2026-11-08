@@ -4,11 +4,18 @@ Run in WSL from backend/:  uvicorn api.real:app --port 8000
 Loading takes about a minute (model and question sets). Responses carry "mock": false.
 """
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 
+from api.cors import add_cors
 from api.jobs import JobManager
+from api.summary import build_summary
 from api.schemas import (
+    AttributionComparison,
     Benchmark,
+    RepairSummary,
+    CompareRequest,
+    CompareResponse,
+    QuestionList,
+    Timeline,
     DecisionRequest,
     DecisionResponse,
     GenerateRequest,
@@ -22,15 +29,15 @@ from api.schemas import (
 )
 
 
+ATTRIBUTION_NOTE = "Push toward each answer letter at the answer position, averaged over dev questions."
+
+
 def create_app(pipeline) -> FastAPI:
     app = FastAPI(title="HippoAI repair API")
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["http://localhost:3000", "http://localhost:5173"],
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    add_cors(app)
     jobs = JobManager(pipeline.run)
+    if hasattr(pipeline, "restore_runs"):
+        pipeline.restore_runs(jobs)
 
     def get_job(repair_id: str):
         job = jobs.get(repair_id)
@@ -85,6 +92,40 @@ def create_app(pipeline) -> FastAPI:
         except ValueError as error:
             raise HTTPException(status_code=409, detail=str(error))
         return GenerateResponse(mock=False, model_version=request.model_version, text=text)
+
+    @app.get("/repairs/{repair_id}/events", response_model=Timeline)
+    def events(repair_id: str):
+        job = get_job(repair_id)
+        return {"mock": False, "repair_id": job.id, "is_replay": job.is_replay, "events": pipeline.timeline(job)}
+
+    @app.get("/repairs/{repair_id}/attribution", response_model=AttributionComparison)
+    def attribution(repair_id: str):
+        job = get_job(repair_id)
+        try:
+            models = pipeline.attribution(job)
+        except ValueError as error:
+            raise HTTPException(status_code=409, detail=str(error))
+        return {"mock": False, "repair_id": job.id, "suite": "clinical", "note": ATTRIBUTION_NOTE, "models": models}
+
+    @app.get("/repairs/{repair_id}/summary", response_model=RepairSummary)
+    def summary(repair_id: str):
+        job = get_job(repair_id)
+        if job.report is None:
+            raise HTTPException(status_code=409, detail="The report isn't ready yet")
+        return build_summary(jobs.status(job), job.report)
+
+    @app.get("/questions", response_model=QuestionList)
+    def questions():
+        return {"mock": False, "questions": pipeline.sealed_questions()}
+
+    @app.post("/compare", response_model=CompareResponse)
+    def compare(request: CompareRequest):
+        job = get_job(request.repair_id)
+        try:
+            items = pipeline.compare(job, request.question_ids, request.count)
+        except ValueError as error:
+            raise HTTPException(status_code=409, detail=str(error))
+        return {"mock": False, "repair_id": job.id, "items": items}
 
     @app.get("/benchmark", response_model=Benchmark)
     def benchmark():

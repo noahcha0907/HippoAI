@@ -23,18 +23,27 @@ from repair.fixer_client import FixerClient, FixerConfig
 from repair.loop import ARCHITECTURE_NOTES, run_repair
 from repair.qwen_backend import QwenBackend
 from repair.sandbox import BubblewrapRunner
+from repair.scan import scan
 from repair.tools import TOOL_SCHEMAS, ToolBox
+from eval.scoring import ROTATIONS, rotated_set
 from repair.validate import DevValidator
 
 RUNS = Path(os.environ.get("HIPPO_RUNS", Path.home() / "hippo-runs")) / "reading"
-DIAGNOSIS_TOOLS = [t for t in TOOL_SCHEMAS if t["function"]["name"] in {"run_python", "forward_pass", "attention", "finish"}]
+DIAGNOSIS_TOOLS = [
+    t
+    for t in TOOL_SCHEMAS
+    if t["function"]["name"]
+    in {"run_python", "forward_pass", "attention", "scan_tensors", "logit_attribution", "mean_input", "finish"}
+]
 COMPLAINT = "Clinical answers seem wrong more often than expected."
 
 DIAGNOSIS_PROMPT = """You audit a possibly damaged copy of Qwen3.5-0.8B that answers clinical multiple-choice questions.
 This is a diagnosis-only run: find which weight tensors, if any, are damaged. Don't write edits.
 
 Tools: run_python reads the weights (NAMES, shape(name), load(name)); forward_pass scores the model on dev
-questions; attention shows attention weights. No gradient descent or running the model inside run_python.
+questions; attention shows attention weights; scan_tensors lists statistical outliers among weight matrices;
+logit_attribution shows which layers push which answer letter; mean_input saves a layer's typical input.
+No gradient descent or running the model inside run_python.
 
 The model may be undamaged. When done, call finish:
 - conclusion "nothing_to_fix" if you find no damage;
@@ -82,6 +91,7 @@ def main() -> None:
     backend = QwenBackend({
         "clinical": load_questions(Path("artifacts/safety_set/dev.jsonl"), 10_000),
         "medmcqa": load_questions(Path("artifacts/medmcqa/dev.jsonl"), 300),
+        "medmcqa_rotated": rotated_set(load_questions(Path("artifacts/medmcqa/dev.jsonl"), 200)),
     })
     summary = []
     for case in args.cases:
@@ -96,8 +106,11 @@ def main() -> None:
             run_dir / "work",
             forward_pass_fn=backend.forward_pass,
             attention_fn=backend.attention,
-            validator=DevValidator(backend.score),
+            validator=DevValidator(backend.score, general_suite="medmcqa_rotated", rotations=ROTATIONS),
             max_forward_passes=args.passes,
+            scan_fn=scan,
+            attribution_fn=backend.logit_attribution,
+            mean_input_fn=backend.mean_input,
         )
         print(f"== {case}: running ({args.minutes} min cap)", flush=True)
         result = run_repair(

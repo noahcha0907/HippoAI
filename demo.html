@@ -7,8 +7,10 @@
     <meta name="description" content="Explore Hippo’s proposed Audit, Repair, Validate, Report workflow in an illustrative walkthrough.">
     <title>Demo — Hippo</title>
     <link rel="stylesheet" href="assets/styles.css?v=c7ae2e4a04d8">
+    <link rel="stylesheet" href="assets/live-demo.css?v=1">
     <script src="assets/header.js?v=be2eb2310638" defer></script>
     <script src="assets/walkthrough.js?v=5bd6b80432ce" defer></script>
+    <script src="assets/live-demo.js?v=2" defer></script>
   </head>
   <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -22,7 +24,44 @@
     </nav>
   </header>
     <main id="main" class="content-site">
-<section class="page-masthead content-masthead"><h1>Demo</h1><h2>From a failure to a repair report.</h2><p>Explore the proposed workflow using a sycophancy scenario: a model changes its answer after a user claims medical expertise. This is an illustrative walkthrough, not a live model run.</p></section>
+<section class="page-masthead content-masthead"><h1>Demo</h1><h2>Ask. Repair. Ask again.</h2><p>A small clinical model was deliberately damaged. Ask it a triage question, watch Hippo diagnose and edit its weights, then ask the same question again. Every answer and number below comes from a real recorded run.</p></section>
+      <section class="live-demo" id="live-demo" aria-label="Recorded repair run">
+        <div class="ld-head">
+          <p class="ld-meta" aria-live="polite"><span>Loading run…</span></p>
+          <p class="ld-complaint"></p>
+        </div>
+        <div class="ld-body">
+          <div class="ld-question-tabs" role="group" aria-label="Choose a sealed question"></div>
+          <div class="ld-steps">
+            <section class="ld-step" id="ld-step-1" aria-labelledby="ld-t1">
+              <span class="step-name">1 · Ask</span>
+              <h3 id="ld-t1">Ask the broken model.</h3>
+              <div class="ld-question"></div>
+              <button type="button" class="ld-button" id="ld-ask-1">Ask the broken model</button>
+              <div id="ld-answer-1" aria-live="polite"></div>
+            </section>
+            <section class="ld-step" id="ld-step-2" aria-labelledby="ld-t2">
+              <span class="step-name">2 · Repair</span>
+              <h3 id="ld-t2">Hippo finds the cause and edits it.</h3>
+              <button type="button" class="ld-button" id="ld-run-fix" disabled>Run Hippo</button>
+              <button type="button" class="ld-link" id="ld-skip" hidden>Skip to result →</button>
+              <p class="ld-clock" id="ld-clock"></p>
+              <ol class="ld-feed" id="ld-feed" aria-live="polite"></ol>
+              <div id="ld-outcome" aria-live="polite"></div>
+              <div class="ld-after-chart" id="ld-after-chart" hidden></div>
+            </section>
+            <section class="ld-step" id="ld-step-3" aria-labelledby="ld-t3">
+              <span class="step-name">3 · Ask again</span>
+              <h3 id="ld-t3">Same question, after Hippo.</h3>
+              <div class="ld-question"></div>
+              <button type="button" class="ld-button" id="ld-ask-2" disabled>Ask again</button>
+              <div id="ld-answer-2" aria-live="polite"></div>
+            </section>
+          </div>
+          <div class="ld-scorecard" id="ld-scorecard" hidden></div>
+        </div>
+      </section>
+      <section class="content-section"><div class="content-heading"><h2>How the<br>pipeline works.</h2><p>The four stages behind the run above, as an illustrative walkthrough.</p></div></section>
       <section class="walkthrough" aria-label="Interactive pipeline walkthrough">
         <div class="walkthrough-controls" hidden><div class="stage-buttons" role="group" aria-label="Choose a stage"><button type="button" data-step="0" aria-controls="step-audit" aria-pressed="true">Audit</button><button type="button" data-step="1" aria-controls="step-repair" aria-pressed="false">Repair</button><button type="button" data-step="2" aria-controls="step-validate" aria-pressed="false">Validate</button><button type="button" data-step="3" aria-controls="step-report" aria-pressed="false">Report</button></div></div>
         <div class="walkthrough-panels"><section class="walkthrough-panel" id="step-audit" aria-labelledby="stage-title-0"><div class="walkthrough-main"><span class="step-name">Audit</span><h2 id="stage-title-0">Find the failure.</h2><p class="walkthrough-summary">A correct answer changes when the user applies pressure. The first task is to investigate why.</p><p>Compare the model’s answer to a benchmark reference, then repeat the question with a misleading claim of expertise. Use those failures to guide inspection of the model’s weights.</p></div><dl class="walkthrough-facts"><div><dt>Input</dt><dd>A model, a known failure, and its task specification.</dd></div><div><dt>Output</dt><dd>A candidate explanation and weights to investigate.</dd></div><div><dt>Question</dt><dd>Does the evidence point to a specific failure mechanism?</dd></div></dl></section>

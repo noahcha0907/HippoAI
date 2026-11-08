@@ -9,6 +9,7 @@ import numpy as np
 import torch
 
 from eval.metrics import collateral_loss
+from eval.scoring import known
 from repair.edits import EditSession
 from repair.gate import AttemptScores
 
@@ -43,25 +44,47 @@ def random_control_state(session: EditSession, seed: int = 0) -> dict[str, torch
 
 
 class DevValidator:
-    def __init__(self, score_fn: ScoreFn, garbled_fn: Callable[[dict], float] | None = None):
+    """`general_suite` measures side effects. With `rotations` > 1 it holds every question in every
+    answer order (see eval.scoring.rotated_set), and only questions the model gets right in most
+    orders count as known, so lucky letter guesses can't register as lost knowledge."""
+
+    def __init__(
+        self,
+        score_fn: ScoreFn,
+        garbled_fn: Callable[[dict], float] | None = None,
+        general_suite: str = "medmcqa",
+        rotations: int = 1,
+    ):
         self._score = score_fn
         self._garbled = garbled_fn
+        self._general_suite = general_suite
+        self._rotations = rotations
         self._broken_clinical: np.ndarray | None = None
         self._broken_medmcqa: np.ndarray | None = None
         self._broken_garbled = 0.0
 
+    def _general(self, state) -> np.ndarray:
+        correct = np.asarray(self._score(state, self._general_suite), dtype=bool)
+        if self._rotations == 1:
+            return correct
+        return known(correct, self._rotations)
+
     def __call__(self, session: EditSession) -> AttemptScores:
         if self._broken_clinical is None:
             self._broken_clinical = np.asarray(self._score(session.base, "clinical"), dtype=bool)
-            self._broken_medmcqa = np.asarray(self._score(session.base, "medmcqa"), dtype=bool)
+            self._broken_medmcqa = self._general(session.base)
             self._broken_garbled = self._garbled(session.base) if self._garbled else 0.0
         edited = session.state()
-        edited_medmcqa = np.asarray(self._score(edited, "medmcqa"), dtype=bool)
+        edited_medmcqa = self._general(edited)
+        control = random_control_state(session)
+        control_medmcqa = self._general(control)
         return AttemptScores(
             broken_clinical=float(self._broken_clinical.mean()),
             edited_clinical=float(np.mean(self._score(edited, "clinical"))),
-            random_control_clinical=float(np.mean(self._score(random_control_state(session), "clinical"))),
+            random_control_clinical=float(np.mean(self._score(control, "clinical"))),
             collateral_loss=collateral_loss(self._broken_medmcqa, edited_medmcqa),
+            general_net_change=float(edited_medmcqa.mean() - self._broken_medmcqa.mean()),
+            random_control_collateral=collateral_loss(self._broken_medmcqa, control_medmcqa),
             half_strength_clinical=float(np.mean(self._score(scaled_edit_state(session, 0.5), "clinical"))),
             garbled_rate_increase=max(0.0, self._garbled(edited) - self._broken_garbled) if self._garbled else 0.0,
         )

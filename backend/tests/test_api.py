@@ -61,3 +61,43 @@ def test_generate_validates_version():
     good = client.post("/generate", json={"model_version": "broken", "prompt": "Hello"})
     assert good.status_code == 200 and good.json()["mock"] is True
     assert client.post("/generate", json={"model_version": "other", "prompt": "Hello"}).status_code == 422
+
+
+def test_mock_demo_endpoints():
+    repair_id = start()
+    assert client.post("/compare", json={"repair_id": repair_id}).status_code == 409
+    poll_to_end(repair_id)
+    compared = client.post("/compare", json={"repair_id": repair_id, "count": 1}).json()
+    assert compared["mock"] is True and len(compared["items"]) == 1
+    events = client.get(f"/repairs/{repair_id}/events").json()
+    assert events["mock"] is True and any(e["kind"] == "attribution" for e in events["events"])
+    assert client.get("/questions").json()["questions"]
+
+
+def test_website_can_call_the_api_including_from_a_public_page_to_localhost():
+    response = client.options(
+        "/models",
+        headers={
+            "Origin": "https://noahcha0907.github.io",
+            "Access-Control-Request-Method": "GET",
+            "Access-Control-Request-Private-Network": "true",
+        },
+    )
+    assert response.headers["access-control-allow-origin"] == "https://noahcha0907.github.io"
+    assert response.headers.get("access-control-allow-private-network") == "true"
+
+
+def test_unknown_sites_are_not_allowed():
+    response = client.options(
+        "/models", headers={"Origin": "https://evil.example", "Access-Control-Request-Method": "GET"}
+    )
+    assert "access-control-allow-origin" not in response.headers
+
+
+def test_mock_attribution_and_summary():
+    repair_id = start()
+    assert client.get(f"/repairs/{repair_id}/summary").status_code == 409
+    poll_to_end(repair_id)
+    chart = client.get(f"/repairs/{repair_id}/attribution").json()
+    assert chart["mock"] is True and chart["models"]["broken"]["strongest_components"][0]["favors"] == "B"
+    assert client.get(f"/repairs/{repair_id}/summary").json()["mock"] is True

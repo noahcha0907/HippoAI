@@ -42,6 +42,8 @@ class Server:
         self.requests.append(json.loads(request.content))
         if self.status != 200:
             return httpx.Response(self.status, text="nope")
+        if not self.turns:  # Out of script: answer like a final summary.
+            return httpx.Response(200, json={"choices": [{"message": {"role": "assistant", "content": "Summary."}}]})
         return httpx.Response(200, json=self.turns.pop(0))
 
 
@@ -139,13 +141,18 @@ def test_failed_attempt_rolls_back_and_informs_fixer(box, tmp_path):
     assert "rolled_back" in tool_reply
 
 
-def test_stops_after_three_rejections(box, tmp_path):
+def test_stops_after_three_rejections_and_still_explains(box, tmp_path):
     turns = []
     for _ in range(3):
         turns += repair_turns()[1:4]
-    result = run_repair(make_client(Server(turns)), box(scores=(BAD, BAD, BAD)), "Wrong triage", tmp_path / "l.jsonl")
+    summary = {"choices": [{"message": {"role": "assistant", "content": "Layer 15 looked off; edits didn't help."}}],
+               "usage": {"prompt_tokens": 5, "completion_tokens": 5}}
+    server = Server(turns + [summary])
+    result = run_repair(make_client(server), box(scores=(BAD, BAD, BAD)), "Wrong triage", tmp_path / "l.jsonl")
     assert result.stop_reason == "no_improvement"
     assert len(result.attempts) == 3
+    assert result.cause == "Layer 15 looked off; edits didn't help."
+    assert "tools" not in server.requests[-1]
 
 
 def test_nothing_to_fix_control(box, tmp_path):
@@ -173,9 +180,12 @@ def test_time_limit(box, tmp_path):
 
 
 def test_server_failure_ends_run_cleanly(box, tmp_path):
-    result = run_repair(make_client(Server([], status=500)), box(), "Wrong triage", tmp_path / "l.jsonl")
+    server = Server([], status=500)
+    result = run_repair(make_client(server), box(), "Wrong triage", tmp_path / "l.jsonl")
     assert result.stop_reason == "fixer_error"
     assert result.outcome == "could_not_repair_safely"
+    assert "didn't report a cause" in result.cause
+    assert len(server.requests) == 2  # The first try and one retry; no summary request to a failing server.
 
 
 def test_auth_failure_isnt_retried():
@@ -320,4 +330,25 @@ def test_dev_validator_computes_all_scores(edited_session):
     scores = DevValidator(score)(edited_session)
     assert scores.broken_clinical == 0.25 and scores.edited_clinical == 0.5
     assert scores.collateral_loss == 0.0
-    assert calls.count("medmcqa") == 2
+    assert calls.count("medmcqa") == 3  # Broken, edited, and the random control.
+
+
+def test_activation_tools_use_budget_and_save_files(box, tmp_path):
+    toolbox = box(max_passes=2)
+    toolbox.scan_fn = lambda state: [{"tensor": LAYER, "outlier_score": 9.0}]
+    toolbox.attribution_fn = lambda session, suite: {"strongest_components": []}
+    toolbox.mean_input_fn = lambda session, name, suite: np.ones(4)
+    assert LAYER in toolbox.call("scan_tensors", {})
+    assert toolbox.forward_passes_used == 0  # Scanning is free.
+    assert "forward_passes_left" in toolbox.call("logit_attribution", {"suite": "clinical"})
+    saved = json.loads(toolbox.call("mean_input", {"tensor_name": LAYER, "suite": "clinical"}))
+    assert saved["saved"] == f"/work/activations/{LAYER}.npy"
+    assert (tmp_path / "work" / "activations" / f"{LAYER}.npy").is_file()
+    assert "used up" in toolbox.call("logit_attribution", {"suite": "clinical"})
+    assert "Unknown tensor" in toolbox.call("mean_input", {"tensor_name": "../x", "suite": "clinical"})
+
+
+def test_activation_tools_report_when_missing(box):
+    toolbox = box()
+    for name, args in (("scan_tensors", {}), ("logit_attribution", {"suite": "clinical"})):
+        assert "isn't available" in toolbox.call(name, args)

@@ -11,11 +11,17 @@ import uuid
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 
+from api.cors import add_cors
 from api.schemas import (
     STAGE_ORDER,
+    AttributionComparison,
     Benchmark,
+    RepairSummary,
+    CompareRequest,
+    CompareResponse,
+    QuestionList,
+    Timeline,
     DecisionRequest,
     DecisionResponse,
     GenerateRequest,
@@ -39,12 +45,7 @@ def load_fixture(name: str) -> dict:
 
 
 app = FastAPI(title="HippoAI repair API (mock)")
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+add_cors(app)
 
 # In-memory only: a restart clears runs.
 RUNS: dict[str, dict] = {}
@@ -126,3 +127,44 @@ def generate(request: GenerateRequest):
 @app.get("/benchmark", response_model=Benchmark)
 def benchmark():
     return load_fixture("benchmark")
+
+
+@app.get("/repairs/{repair_id}/events", response_model=Timeline)
+def events(repair_id: str):
+    get_run(repair_id)
+    return {**load_fixture("events"), "repair_id": repair_id}
+
+
+@app.get("/questions", response_model=QuestionList)
+def questions():
+    items = load_fixture("compare")["items"]
+    return {"mock": True, "questions": [{k: i[k] for k in ("id", "category", "question")} for i in items]}
+
+
+@app.post("/compare", response_model=CompareResponse)
+def compare(request: CompareRequest):
+    run = get_run(request.repair_id)
+    if run["polls"] <= REPORT_INDEX and run["decision"] is None:
+        raise HTTPException(status_code=409, detail="The repair hasn't finished")
+    items = load_fixture("compare")["items"]
+    if request.question_ids:
+        items = [i for i in items if i["id"] in set(request.question_ids)]
+    return {"mock": True, "repair_id": request.repair_id, "items": items[: request.count]}
+
+
+def _finished(repair_id: str) -> None:
+    run = get_run(repair_id)
+    if run["polls"] <= REPORT_INDEX and run["decision"] is None:
+        raise HTTPException(status_code=409, detail="The repair hasn't finished")
+
+
+@app.get("/repairs/{repair_id}/attribution", response_model=AttributionComparison)
+def attribution(repair_id: str):
+    _finished(repair_id)
+    return {**load_fixture("attribution"), "repair_id": repair_id}
+
+
+@app.get("/repairs/{repair_id}/summary", response_model=RepairSummary)
+def summary(repair_id: str):
+    _finished(repair_id)
+    return {**load_fixture("summary"), "repair_id": repair_id}

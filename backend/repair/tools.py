@@ -81,6 +81,27 @@ TOOL_SCHEMAS = [
         ["texts"],
     ),
     _tool(
+        "scan_tensors",
+        "Run a statistics script over all weight matrices and list the ones that stand out from the same matrix in "
+        "other layers (few distinct values, a dominant direction, shifted mean, unusual spread). Free. A lead, not proof.",
+        {},
+        [],
+    ),
+    _tool(
+        "logit_attribution",
+        "On dev questions, measure how much each layer's attention and MLP output pushes each answer letter (A-D) "
+        "at the answer position, with pending edits applied. Uses 1 forward pass.",
+        {"suite": {"type": "string", "enum": ["clinical", "medmcqa"]}},
+        ["suite"],
+    ),
+    _tool(
+        "mean_input",
+        "Save the average input vector of the layer owning a weight matrix, on dev questions, to "
+        "/work/activations/<tensor_name>.npy for use in run_python, for example to design a rank-1 edit. Uses 1 forward pass.",
+        {"tensor_name": {"type": "string"}, "suite": {"type": "string", "enum": ["clinical", "medmcqa"]}},
+        ["tensor_name", "suite"],
+    ),
+    _tool(
         "save_edit",
         "Queue a candidate tensor already written with save(name, array) in run_python.",
         {"tensor_name": {"type": "string"}},
@@ -128,6 +149,9 @@ class ToolBox:
         validator: Callable[[EditSession], AttemptScores],
         max_forward_passes: int = 25,
         thresholds: GateThresholds = GateThresholds(),
+        scan_fn: Callable[[dict], Any] | None = None,
+        attribution_fn: Callable[[EditSession, str], Any] | None = None,
+        mean_input_fn: Callable[[EditSession, str, str], Any] | None = None,
     ):
         self.session = session
         self.runner = runner
@@ -137,6 +161,10 @@ class ToolBox:
         self.validator = validator
         self.max_forward_passes = max_forward_passes
         self.thresholds = thresholds
+        self.scan_fn = scan_fn
+        self.attribution_fn = attribution_fn
+        self.mean_input_fn = mean_input_fn
+        self._scan_cache = None
         self.forward_passes_used = 0
         self.attention_calls_used = 0
         self.python_runs = 0
@@ -150,6 +178,9 @@ class ToolBox:
             "run_python": self._run_python,
             "forward_pass": self._forward_pass,
             "attention": self._attention,
+            "scan_tensors": self._scan_tensors,
+            "logit_attribution": self._logit_attribution,
+            "mean_input": self._mean_input,
             "save_edit": self._save_edit,
             "submit_attempt": self._submit_attempt,
             "finish": self._finish,
@@ -189,6 +220,48 @@ class ToolBox:
         result = self.attention_fn(self.session, texts)
         self.attention_calls_used += 1
         return json.dumps(result)
+
+    def _use_pass(self) -> str | None:
+        if self.forward_passes_used >= self.max_forward_passes:
+            return f"Error: forward-pass budget of {self.max_forward_passes} is used up"
+        return None
+
+    def _scan_tensors(self) -> str:
+        if self.scan_fn is None:
+            return "Error: scan_tensors isn't available in this run"
+        if self._scan_cache is None:
+            self._scan_cache = self.scan_fn(self.session.base)
+        return json.dumps({"suspects": self._scan_cache, "note": "Statistics only. Natural outliers also appear."})
+
+    def _logit_attribution(self, suite: str) -> str:
+        if self.attribution_fn is None:
+            return "Error: logit_attribution isn't available in this run"
+        refusal = self._use_pass()
+        if refusal:
+            return refusal
+        result = self.attribution_fn(self.session, suite)
+        self.forward_passes_used += 1
+        return json.dumps({"result": result, "forward_passes_left": self.max_forward_passes - self.forward_passes_used})
+
+    def _mean_input(self, tensor_name: str, suite: str) -> str:
+        if self.mean_input_fn is None:
+            return "Error: mean_input isn't available in this run"
+        if not TENSOR_NAME.fullmatch(tensor_name) or tensor_name not in self.session.base:
+            raise ValueError(f"Unknown tensor: {tensor_name!r}")
+        refusal = self._use_pass()
+        if refusal:
+            return refusal
+        vector = np.asarray(self.mean_input_fn(self.session, tensor_name, suite), dtype=np.float32)
+        self.forward_passes_used += 1
+        folder = self.work_dir / "activations"
+        folder.mkdir(parents=True, exist_ok=True)
+        np.save(folder / f"{tensor_name}.npy", vector, allow_pickle=False)
+        return json.dumps({
+            "saved": f"/work/activations/{tensor_name}.npy",
+            "length": int(vector.size),
+            "norm": round(float(np.linalg.norm(vector)), 4),
+            "forward_passes_left": self.max_forward_passes - self.forward_passes_used,
+        })
 
     def _edit_file(self, tensor_name: str) -> Path:
         if not TENSOR_NAME.fullmatch(tensor_name):

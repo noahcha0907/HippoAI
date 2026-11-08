@@ -30,6 +30,7 @@ class Job:
     error: str | None = None
     decision: Stage | None = None
     artifacts: dict[str, Any] = field(default_factory=dict)  # Pipeline-owned, such as the repaired weights.
+    is_replay: bool = False
 
 
 def _attempt(record: dict) -> dict:
@@ -45,6 +46,8 @@ def _attempt(record: dict) -> dict:
             "broken_clinical_accuracy": scores.get("broken_clinical"),
             "random_control_accuracy": scores.get("random_control_clinical"),
             "collateral_loss": scores.get("collateral_loss"),
+            "random_control_collateral": scores.get("random_control_collateral"),
+            "general_net_change": scores.get("general_net_change"),
         },
         "outcome": record.get("outcome", "rolled_back"),
         "reason": "; ".join(record.get("reasons", [])) or "Passed the dev gate",
@@ -76,6 +79,16 @@ class JobManager:
         with self._lock:
             self._jobs[job.id] = job
         self._executor.submit(self._run, job)
+        return job
+
+    def restore(self, job: Job, events: list[dict]) -> Job:
+        """Add a finished run loaded from disk, rebuilding its progress from its log."""
+        for event in events:
+            self._on_event(job, event)
+        with self._lock:
+            job.stage = Stage.awaiting_decision
+            job.is_replay = True
+            self._jobs[job.id] = job
         return job
 
     def get(self, repair_id: str) -> Job | None:
@@ -138,7 +151,7 @@ class JobManager:
                 "budget": job.request.budget.model_dump(),
                 "located_regions": list(job.located_regions),
                 "attempts": list(job.attempts),
-                "is_replay": False,
+                "is_replay": job.is_replay,
                 "error": job.error,
             }
 

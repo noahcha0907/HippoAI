@@ -119,6 +119,81 @@ class QwenBackend:
             "example_failures_after_edits": failures,
         }
 
+    def _layers(self):
+        return self.model.model.language_model.layers
+
+    def logit_attribution(self, session: EditSession, suite: str, top: int = 10) -> dict:
+        """How much each layer's attention and MLP output pushes each answer letter at the answer position.
+
+        Direct contribution through the final norm and output head, averaged over dev questions,
+        relative to the mean over the four letters (so a positive value favors that letter).
+        """
+        if suite not in self.dev_sets:
+            raise ValueError(f"Unknown suite {suite!r}; choose from {sorted(self.dev_sets)}")
+        captured: dict[str, list[torch.Tensor]] = {}
+        final: list[torch.Tensor] = []
+
+        def keep(label):
+            def hook(module, args, output):
+                out = output[0] if isinstance(output, tuple) else output
+                captured.setdefault(label, []).append(out[:, -1, :].float())
+
+            return hook
+
+        handles = []
+        for i, layer in enumerate(self._layers()):
+            if hasattr(layer, "self_attn"):
+                handles.append(layer.self_attn.register_forward_hook(keep(f"layer {i} attention")))
+            else:
+                handles.append(layer.linear_attn.register_forward_hook(keep(f"layer {i} linear_attention")))
+            handles.append(layer.mlp.register_forward_hook(keep(f"layer {i} mlp")))
+        norm = self.model.model.language_model.norm
+        handles.append(norm.register_forward_pre_hook(lambda m, args: final.append(args[0][:, -1, :].float())))
+        try:
+            with self.lock:
+                rows = self.score_items(session.state(), self.dev_sets[suite])
+        finally:
+            for handle in handles:
+                handle.remove()
+
+        residual = torch.cat(final)
+        scale = (1.0 + norm.weight.float()) / residual.pow(2).mean(-1, keepdim=True).add(norm.eps).sqrt()
+        ids = [self.tokenizer.encode(letter, add_special_tokens=False)[0] for letter in "ABCD"]
+        head = self.params["lm_head.weight"].float()[ids]
+        components = []
+        for label, parts in captured.items():
+            logits = (torch.cat(parts) * scale) @ head.T
+            relative = (logits - logits.mean(-1, keepdim=True)).mean(0)
+            components.append({
+                "component": label,
+                "push_by_letter": {letter: round(float(x), 3) for letter, x in zip("ABCD", relative)},
+                "favors": "ABCD"[int(relative.argmax())],
+                "strength": round(float(relative.abs().max()), 3),
+            })
+        components.sort(key=lambda c: -c["strength"])
+        return {
+            "questions": len(rows),
+            "answer_letters": {letter: sum(r["prediction"] == letter for r in rows) for letter in "ABCD"},
+            "accuracy": round(float(np.mean([r["correct"] for r in rows])), 3),
+            "strongest_components": components[:top],
+        }
+
+    def mean_input(self, session: EditSession, tensor_name: str, suite: str) -> np.ndarray:
+        """Average input vector to the layer that owns `tensor_name`, at the answer position."""
+        if not tensor_name.endswith(".weight") or tensor_name not in self.params:
+            raise ValueError(f"Unknown weight tensor: {tensor_name}")
+        if suite not in self.dev_sets:
+            raise ValueError(f"Unknown suite {suite!r}; choose from {sorted(self.dev_sets)}")
+        module = self.model.get_submodule(tensor_name[: -len(".weight")])
+        captured = []
+        handle = module.register_forward_pre_hook(lambda m, args: captured.append(args[0][:, -1, :].float().cpu()))
+        try:
+            with self.lock:
+                self.score_items(session.state(), self.dev_sets[suite])
+        finally:
+            handle.remove()
+        return torch.cat(captured).mean(0).numpy()
+
     def attention(self, session: EditSession, texts: list[str]) -> dict:
         """Where the final token attends, per attention layer and head. Weights only, no hidden states."""
         with self.lock:

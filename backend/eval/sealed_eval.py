@@ -10,7 +10,7 @@ import torch
 
 from breakers.quantize import quantize_tensor
 from eval.metrics import collateral_loss, recovery, recovery_ci, unsafe_answer_rate
-from eval.scoring import Question
+from eval.scoring import Question, known
 
 ScoreItems = Callable[[dict[str, torch.Tensor], list[Question]], list[dict]]
 MAX_EXAMPLES = 3
@@ -49,9 +49,13 @@ def evaluate_sealed(
     clean: dict[str, torch.Tensor],
     safety: list[Question],
     medmcqa: list[Question],
+    rotated_medmcqa: list[Question] | None = None,
 ) -> dict:
+    """`rotated_medmcqa` (eval.scoring.rotated_set) makes collateral count only knowledge that survives
+    answer-order rotation, matching the repair gate."""
+    states = {"broken": broken, "repaired": repaired, "clean": clean}
     rows = {}
-    for label, state in (("broken", broken), ("repaired", repaired), ("clean", clean)):
+    for label, state in states.items():
         rows[label] = (score_items(state, safety), score_items(state, medmcqa) if medmcqa else [])
 
     correct = {label: np.array([r["correct"] for r in rows[label][0]]) for label in rows}
@@ -61,9 +65,15 @@ def evaluate_sealed(
     )
     interval = recovery_ci(correct["broken"], correct["repaired"], correct["clean"])
 
-    medmcqa_broken = np.array([r["correct"] for r in rows["broken"][1]], dtype=bool)
-    medmcqa_repaired = np.array([r["correct"] for r in rows["repaired"][1]], dtype=bool)
-    collateral = collateral_loss(medmcqa_broken, medmcqa_repaired) if medmcqa else 0.0
+    collateral = 0.0
+    if medmcqa and rotated_medmcqa:
+        known_rows = {label: known([r["correct"] for r in score_items(states[label], rotated_medmcqa)])
+                      for label in ("broken", "repaired")}
+        collateral = collateral_loss(known_rows["broken"], known_rows["repaired"])
+    elif medmcqa:
+        medmcqa_broken = np.array([r["correct"] for r in rows["broken"][1]], dtype=bool)
+        medmcqa_repaired = np.array([r["correct"] for r in rows["repaired"][1]], dtype=bool)
+        collateral = collateral_loss(medmcqa_broken, medmcqa_repaired)
 
     examples = []
     for i, item in enumerate(safety):

@@ -77,6 +77,8 @@ class DevMetrics(BaseModel):
     broken_clinical_accuracy: float | None = None
     random_control_accuracy: float | None = None
     collateral_loss: float | None = None
+    random_control_collateral: float | None = None
+    general_net_change: float | None = None
     medmcqa_accuracy: float | None = None
 
 
@@ -189,3 +191,108 @@ class BenchmarkRow(BaseModel):
 class Benchmark(BaseModel):
     mock: bool
     rows: list[BenchmarkRow]
+
+
+class CompareRequest(BaseModel):
+    repair_id: str
+    question_ids: list[str] | None = Field(default=None, description="Omit to get showcase questions the repair fixed")
+    count: int = Field(default=4, ge=1, le=20)
+
+
+class CompareAnswer(BaseModel):
+    letter: str
+    text: str
+    correct: bool
+    unsafe: bool
+
+
+class CompareItem(BaseModel):
+    id: str
+    category: str
+    question: str
+    options: dict[str, str]
+    expected: str
+    unsafe_options: list[str]
+    answers: dict[Literal["broken", "repaired", "clean"], CompareAnswer]
+
+
+class CompareResponse(BaseModel):
+    mock: bool
+    repair_id: str
+    items: list[CompareItem]
+
+
+class QuestionSummary(BaseModel):
+    id: str
+    category: str
+    question: str
+
+
+class QuestionList(BaseModel):
+    mock: bool
+    questions: list[QuestionSummary]
+
+
+class TimelineEvent(BaseModel):
+    seconds: float | None
+    kind: str
+    title: str
+    detail: dict
+
+
+class Timeline(BaseModel):
+    mock: bool
+    repair_id: str
+    is_replay: bool
+    events: list[TimelineEvent]
+
+
+class AttributionComparison(BaseModel):
+    mock: bool
+    repair_id: str
+    suite: str
+    note: str
+    models: dict[Literal["broken", "repaired", "clean"], dict]
+
+
+class EditSummary(BaseModel):
+    tensors_touched: list[str]
+    weights_changed: int
+    weights_changed_pct: float
+
+
+class AttemptCounts(BaseModel):
+    total: int
+    accepted: int
+    rolled_back: int
+
+
+class BestAttempt(BaseModel):
+    number: int
+    outcome: str
+    dev_accuracy: float | None
+    broken_dev_accuracy: float | None
+    random_control_accuracy: float | None
+    reason: str
+
+
+class RepairSummary(BaseModel):
+    mock: bool
+    repair_id: str
+    model_id: str
+    complaint: str
+    outcome: str
+    cause: str
+    accuracy: dict[str, float]
+    unsafe_answer_rate: dict[str, float]
+    recovery: float | None
+    recovery_ci95: tuple[float, float] | None
+    sealed_questions_note: str
+    edit: EditSummary
+    attempts: AttemptCounts
+    best_attempt: BestAttempt | None
+    minutes: float
+    tokens: int
+    is_replay: bool
+    gate_note: str
+    disclaimer: str
