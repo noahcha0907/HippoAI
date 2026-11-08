@@ -12,3 +12,6 @@ __pycache__/
 backend/artifacts/
 backend/runs/
 /kairo/
+/.demo-qa/
+__pycache__/
+*.py[cod]

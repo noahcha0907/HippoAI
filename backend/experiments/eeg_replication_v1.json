@@ -1,0 +1,86 @@
+{
+  "study_id": "eeg_replication_v1",
+  "declared_date": "2026-11-08",
+  "reference_run_id": "b6e81501-ff50-4322-a2e0-cc514ba1d475",
+  "config": {
+    "astra": true,
+    "attempts": 5,
+    "batch_size": 64,
+    "blink_amplitude": 3.0,
+    "cached_usd_per_million": 1.0,
+    "clean_floor": 0.35,
+    "conditions": [
+      "clean",
+      "eye_blink"
+    ],
+    "device": "auto",
+    "epochs": 300,
+    "evidence_conditions": [
+      "A",
+      "B"
+    ],
+    "extended_baselines": false,
+    "hum_amplitude": 0.5,
+    "input_usd_per_million": 10.0,
+    "learning_rate": 0.001,
+    "max_api_calls": 144,
+    "max_changed_share": 0.25,
+    "max_clean_drop": 0.02,
+    "max_estimated_usd": 100.0,
+    "min_reliance": 0.15,
+    "muscle_amplitude": 1.0,
+    "other_prevalence": 0.1,
+    "output_usd_per_million": 50.0,
+    "paired_prevalence": 0.8,
+    "patience": 30,
+    "repair_policy": "feedback_guided",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "split_seed": 17,
+    "subjects": [
+      2,
+      3
+    ]
+  },
+  "source_sha256": {
+    "kirby/eeg/__init__.py": "6a0295e2e519dafa7a73b14711f08a1c6167d82a0f8535e493b6b4f9aa56e24d",
+    "kirby/eeg/__main__.py": "12513d5e99d87d4954563ef9adb72bd5eea7ca2bd6d9e0374e123c6d48bf198b",
+    "kirby/eeg/astra_eeg.py": "c3a8d1814a8019152f8b5e4fa472944b63c1c64fb22d9fae9c79a48af1b12cb2",
+    "kirby/eeg/baselines.py": "43d4dd2445bbeb2e05de25150e90b993320e05ca7063f8deb14dcdc4f7948e47",
+    "kirby/eeg/config.py": "8e6a9932d0d96d5c896d558a62a8c3e7c7f4c1838c9a4feee062629bed68259a",
+    "kirby/eeg/data.py": "0ebe56b4ba51848c46363cc1d01fdc8b8215e668065af7fa616eecee32b97f8c",
+    "kirby/eeg/edits.py": "e1d29d8d88f1d07f1de631fa05191fe95a25b004826afcb5e7920cb9533033a2",
+    "kirby/eeg/eegnet.py": "350764eb216ca33197a1293445f57ea77e55317c2803ebb3960f3f9b5157dc6f",
+    "kirby/eeg/evaluate.py": "f91235fcad49ed5aacca209efb10422ab93c17b9bef9f38366c0f93e347012e5",
+    "kirby/eeg/packet.py": "28fc66657abbc3e78a510c0150671390c37499a584bd6c0e605551a974de376c",
+    "kirby/eeg/report.py": "bf345ccf6d75be517269691caffa70a17c3cd791f0dc4612be6698a758e0a3d5",
+    "kirby/eeg/runner.py": "76520363d8dce051126fd5bfdd26886a6b7ce4b1ff5dc169fcdf6b07c22eabd9",
+    "kirby/eeg/shortcuts.py": "1a2e1e0758241112b9923c6f34b20694738582549427a179fc5ff259e99ab663",
+    "kirby/eeg/train.py": "b31176f2218e75ea0b23ce184ae81969d7498178b91a18dd1b31397d6f9c0481",
+    "kirby/astra.py": "12bbf3a092d1a11d57a447f9aabe06870867fdf40936727ba32b929b97643bbf",
+    "kirby/records.py": "cfa706f9772af0746bf4e30f3169af2040004eb16b8aee262aefd165dac81dc5",
+    "kirby/patches.py": "cf1df74d50d9d8b1313bc4e660ad01040215bd36029f9d3851882c51c8f517b7",
+    "pyproject.toml": "9e56267ccb0b0a2d5afadeabee093ae3d6a8608c1bd8edf209187b4c98740372"
+  },
+  "analysis": {
+    "population": "Subjects 2 and 3, not previously inspected in this session; seeds are paired replicates within subjects.",
+    "primary": "For Astra A and B separately, report final swapped-accuracy delta versus no_edit, averaged across seeds within each subject; report both subjects and their equal-weight mean.",
+    "preservation": "Also report final clean delta, paired artifact flip-rate delta, worst-condition delta and all-four-criteria pass count. Do not call a gain a repair if preservation fails.",
+    "denominators": "Report every planned subject/seed/condition, gate exclusion and failure. Retained originals have zero repair gain. Excluded/missing final results remain missing, not zero or successes.",
+    "comparators": [
+      "no_edit",
+      "random",
+      "rule",
+      "input_filter"
+    ],
+    "limitations": "Two new subjects are a small replication, not proof of broad or clinical generalization. Keep A/B separate and do not select the winner using final outcomes. Software/provider versions are recorded per run, not guaranteed identical.",
+    "changes_from_run6": [
+      "Subjects 1 -> 2 and 3",
+      "Total API request and estimated-cost budgets doubled; per-model budgets unchanged."
+    ]
+  },
+  "source_hash_normalization": "UTF-8 with LF newlines (portable across Git checkouts)"
+}

@@ -120,8 +120,11 @@ are attributed to external studies rather than presented as Hippo results.
   extra labels. Research and explanation sit below the hero.
 - About Us describes the project and its principles. No team biographies or
   portraits were supplied, so none are invented.
-- Demo is an illustrative, interactive workflow. It does not execute a model,
-  claim measured repair outcomes, or collect access requests.
+- Demo now replays saved EEG experiment evidence through Audit, Repair,
+  Validate, and Report. It accepts the backend's report.json or an extracted
+  evidence folder. The real run6 report and receipts load automatically.
+  It does not execute models or contact an API. Loaded measurements, missing
+  results, failed gates and rejected edits stay distinct. See DEMO_REPLAY.md.
 - The claim that all fixes require a full retrain is softened: targeted editing
   is one proposed alternative, not the only alternative to full retraining.
 - The 64/100 and 18/100 statistics describe a historical review of CE-marked
@@ -136,3 +139,25 @@ Christophe et al. (rounded to one decimal); the clinical-network findings match
 arXiv 2611.05341; the Qwen3.5-0.8B results match the weight-space programming
 research page; the clinical-impact framework and historical review match
 https://www.nature.com/articles/s41746-024-01093-w.
+
+## EEG demo update (2026-11-08)
+
+The current demo follows the EEG pivot described in backend/docs/EEG_EXPERIMENT.md,
+using planted blink, hum or muscle artifacts in small EEGNet models. The earlier
+sycophancy research remains background context for the broader project, not a
+claim about the current demonstration's results. A successful local software
+test is not a successful scientific experiment. The demo uses only measurements
+from a recorded report and does not infer clinical safety or patient benefit.
+
+### Recorded run6 results
+
+Run `b6e81501-ff50-4322-a2e0-cc514ba1d475` is bundled with the demo. On one
+subject across three seeds, Astra tested 30 bounded edits with development
+feedback, accepted six, and five of the six edited comparisons met the same
+improvement/preservation criteria on the final session. All 12 first diagnoses
+abstained; this supports feedback-guided repair, not reliable diagnosis from
+weights alone. Astra A's mean swapped-accuracy gain was 1.50 percentage points;
+Astra B regressed on seed 2. Preserve these mixed outcomes in any pitch.
+The final session was inspected in an earlier run, making this exploratory.
+The newer clinical-model replay from main remains a separate demonstration
+below the EEG replay; its results must not be attributed to the EEG experiment.
