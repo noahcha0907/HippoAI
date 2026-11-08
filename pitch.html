@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="assets/hippo-logo-pink-filled.svg?v=355af9359596">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The case for Hippo: targeted clinical AI repair, supporting studies, a proposed validation pipeline, and the limits of the evidence.">
+    <title>Pitch — Hippo</title>
+    <link rel="stylesheet" href="assets/styles.css?v=b62b408b001e">
+    <script src="assets/header.js?v=be2eb2310638" defer></script>
+      <script src="assets/scroll-highlights.js?v=3d5f85591c7a" defer></script>
+  </head>
+  <body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Hippo home"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg?v=355af9359596" alt="" width="220" height="220"><span>Hippo</span></a>
+    <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="demo.html">Demo</a>
+        <a href="pitch.html" aria-current="page">Pitch</a>
+    </nav>
+  </header>
+    <main id="main" class="content-site">
+<section class="page-masthead content-masthead"><h1>Pitch</h1><h2 data-scroll-highlight>Fix the flaw, not the whole model.</h2><p>Hippo is a research pipeline for finding a specific failure inside a healthcare AI model, proposing a targeted weight edit, and independently testing whether it helps.</p></section>
+      <section class="content-split pitch-intro"><h2 data-scroll-highlight>A more focused<br>way to repair.</h2><div class="prose"><p>Small models can make AI more practical to run locally. But a useful model can still contain a costly blind spot, and updating it can require substantial training and evaluation.</p><p>Hippo explores a different route: audit the weights, make a surgical edit, validate the change, and report the remaining risk in clinical terms. The aim is a smaller, traceable repair that earns its place through testing.</p><a class="pill-link" href="demo.html">Walk through the pipeline <span aria-hidden="true">↗</span></a></div></section>
+      <section id="sycophancy" class="content-section">
+        <div class="content-heading"><h2 data-scroll-highlight>When agreement<br>overrides accuracy.</h2><p>Sycophancy is a model’s tendency to favor a user’s suggestion over a correct answer.</p></div>
+        <div class="study-layout"><div class="prose"><p>In a MedQA study, an incorrect suggestion paired with a claim of medical expertise reduced accuracy across multiple models. The result depends on the model and how the prompt is phrased.</p><p>These are medical-exam benchmark results, not measurements of patient outcomes.</p><a class="source-link" href="https://arxiv.org/html/2601.18334v1#A1">Read the study and Table 2 ↗</a></div><figure class="comparison-chart"><figcaption>Qwen3-8B · MedQA accuracy</figcaption><div class="comparison-row"><span>Without pressure</span><strong>77.5%</strong><div class="comparison-track"><span style="width:77.5%"></span></div></div><div class="comparison-row"><span>With an incorrect expert suggestion</span><strong>53.6%</strong><div class="comparison-track"><span style="width:53.6%"></span></div></div><p>A drop of 23.9 percentage points.</p></figure></div>
+        <div class="table-scroll" role="region" aria-label="MedQA accuracy comparison" tabindex="0"><table><caption>Accuracy under an incorrect expert suggestion</caption><thead><tr><th scope="col">Model</th><th scope="col">Without pressure</th><th scope="col">With expert pressure</th></tr></thead><tbody><tr><th scope="row">Qwen3-4B</th><td>71.9%</td><td>48.9%</td></tr><tr><th scope="row">Qwen3-8B</th><td>77.5%</td><td>53.6%</td></tr><tr><th scope="row">Qwen3-14B</th><td>82.6%</td><td>60.2%</td></tr><tr><th scope="row">Llama-3 70B</th><td>84.1%</td><td>69.1%</td></tr><tr><th scope="row">Qwen3-235B-A22B</th><td>91.6%</td><td>66.8%</td></tr></tbody></table></div>
+      </section>
+      <section class="content-split green-section"><h2 data-scroll-highlight>Errors have<br>different consequences.</h2><div class="prose"><p>Accuracy alone cannot tell us whether a missed finding changes care. Evans and Snead argue for evaluating AI errors at technical, pathological, and clinical levels.</p><p>They cite a review of 100 CE-marked radiology AI products: 64 lacked peer-reviewed safety evidence, and only 18 had evidence of clinical impact. These figures describe that historical review, not today’s entire market.</p><p>Hippo’s proposed reporting follows the same principle: explain what failed and why it matters, alongside the numbers.</p><a class="source-link" href="https://www.nature.com/articles/s41746-024-01093-w">Read the clinical-impact perspective ↗</a></div></section>
+      <section id="evidence" class="content-section">
+        <div class="content-heading"><h2 data-scroll-highlight>Why weight-space<br>repair is worth testing.</h2><p>Early external studies motivate the approach. They do not establish Hippo’s clinical effectiveness.</p></div>
+        <div class="study-cards"><article class="study-card"><h3>Clinical decision networks</h3><p>Nusrat and Nusrat studied radiotherapy screening networks with 433–4,801 parameters and deliberately planted flaws.</p><div class="study-result"><strong>16 / 18</strong><span>flawed networks located and repaired</span></div><p>Repairs changed a median of three parameters. The auditor found only one of three hidden triggers and correctly cleared two of five healthy networks without prompting.</p><a class="source-link" href="https://arxiv.org/abs/2611.05341">Clinical network audit · November 2026 ↗</a></article>
+        <article class="study-card"><h3>A small language model</h3><p>Takehi and colleagues used direct weight editing to reduce reasoning loops in Qwen3.5-0.8B.</p><div class="study-result"><strong>0.016%</strong><span>of the model’s weights changed</span></div><p>MATH-500 accuracy rose from 7.9% to 48.1%, while IFEval rose from 21.0% to 62.3%. These non-clinical results show a specific repair, not a general guarantee.</p><a class="source-link" href="https://rikiyat.github.io/blog/weight-space-programming/">Weight-space programming · November 2026 ↗</a></article></div>
+      </section>
+      <section class="content-section pitch-workflow"><h2 data-scroll-highlight>The proposed pipeline.</h2><div class="workflow-grid"><article><h3>Audit</h3><p>Investigate the weights behind a known failure.</p></article><article><h3>Repair</h3><p>Propose and record a targeted edit.</p></article><article><h3>Validate</h3><p>Test independently and check for regressions. Reject or revise failed candidates.</p></article><article><h3>Report</h3><p>Describe behavior changes, potential patient impact, and unresolved risks for review.</p></article></div></section>
+      <section id="limits" class="content-section limits-section"><h2 data-scroll-highlight>What remains unproven.</h2><div class="limits-grid"><article><h3>Repairing sycophancy</h3><p>Weight inspection has identified a sycophantic model. Repairing that behavior through weight editing remains Hippo’s hypothesis.</p></article><article><h3>Clinical safety</h3><p>Finding and fixing a flaw does not certify a model as safe. Independent testing and clinical review remain essential.</p></article><article><h3>Scale and capability</h3><p>The cited language-model repair used 0.8 billion parameters. It does not establish reliable repair of larger models or the addition of skills a model lacks.</p></article><article><h3>Deployment</h3><p>Hippo’s initial focus is research evaluation. Any use in a clinical workflow would require appropriate validation, governance, and applicable regulatory review.</p></article></div></section>
+      <section id="sources" class="content-section sources-section"><h2 data-scroll-highlight>The sources.</h2><div class="source-list"><a href="https://arxiv.org/html/2601.18334v1">Overalignment in Frontier LLMs<span>Christophe et al. · M42 · 2026 ↗</span></a><a href="https://arxiv.org/abs/2611.05341">Weight-space programming for auditing clinical decision networks<span>Nusrat &amp; Nusrat · 2026 ↗</span></a><a href="https://rikiyat.github.io/blog/weight-space-programming/">Sparks of Weight-Space Programming<span>Takehi, Teoh, Zhang &amp; Khattab · 2026 ↗</span></a><a href="https://www.nature.com/articles/s41746-024-01093-w">Understanding AI errors in terms of patient impact<span>Evans &amp; Snead · npj Digital Medicine · 2024 ↗</span></a></div></section>
+
+    </main>
+  <footer class="site-footer">
+    <a class="footer-brand" href="index.html" aria-label="Hippo home"><span class="footer-wordmark"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg?v=355af9359596" alt="" width="220" height="220"><span>Hippo</span></span><span aria-hidden="true">↗</span></a>
+    <div class="footer-meta"><span>© 2026 Hippo</span><span>Researching surgical repair for clinical AI.</span><a href="pitch.html#sources">Research &amp; sources ↗</a></div>
+  </footer>
+  </body>
+</html>

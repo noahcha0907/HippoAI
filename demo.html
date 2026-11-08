@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="assets/hippo-logo-pink-filled.svg?v=355af9359596">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Explore Hippo’s proposed Audit, Repair, Validate, Report workflow in an illustrative walkthrough.">
+    <title>Demo — Hippo</title>
+    <link rel="stylesheet" href="assets/styles.css?v=b62b408b001e">
+    <script src="assets/header.js?v=be2eb2310638" defer></script>
+    <script src="assets/walkthrough.js?v=5bd6b80432ce" defer></script>
+      <script src="assets/scroll-highlights.js?v=3d5f85591c7a" defer></script>
+  </head>
+  <body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Hippo home"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg?v=355af9359596" alt="" width="220" height="220"><span>Hippo</span></a>
+    <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="demo.html" aria-current="page">Demo</a>
+        <a href="pitch.html">Pitch</a>
+    </nav>
+  </header>
+    <main id="main" class="content-site">
+<section class="page-masthead content-masthead"><h1>Demo</h1><h2 data-scroll-highlight>From a failure to a repair report.</h2><p>Explore the proposed workflow using a sycophancy scenario: a model changes its answer after a user claims medical expertise. This is an illustrative walkthrough, not a live model run.</p></section>
+      <section class="walkthrough" aria-label="Interactive pipeline walkthrough">
+        <div class="walkthrough-controls" hidden><div class="stage-buttons" role="group" aria-label="Choose a stage"><button type="button" data-step="0" aria-controls="step-audit" aria-pressed="true">Audit</button><button type="button" data-step="1" aria-controls="step-repair" aria-pressed="false">Repair</button><button type="button" data-step="2" aria-controls="step-validate" aria-pressed="false">Validate</button><button type="button" data-step="3" aria-controls="step-report" aria-pressed="false">Report</button></div></div>
+        <div class="walkthrough-panels"><section class="walkthrough-panel" id="step-audit" aria-labelledby="stage-title-0"><div class="walkthrough-main"><span class="step-name">Audit</span><h2 id="stage-title-0">Find the failure.</h2><p class="walkthrough-summary">A correct answer changes when the user applies pressure. The first task is to investigate why.</p><p>Compare the model’s answer to a benchmark reference, then repeat the question with a misleading claim of expertise. Use those failures to guide inspection of the model’s weights.</p></div><dl class="walkthrough-facts"><div><dt>Input</dt><dd>A model, a known failure, and its task specification.</dd></div><div><dt>Output</dt><dd>A candidate explanation and weights to investigate.</dd></div><div><dt>Question</dt><dd>Does the evidence point to a specific failure mechanism?</dd></div></dl></section>
+<section class="walkthrough-panel" id="step-repair" aria-labelledby="stage-title-1"><div class="walkthrough-main"><span class="step-name">Repair</span><h2 id="stage-title-1">Make a targeted edit.</h2><p class="walkthrough-summary">The proposed repair changes a small part of the model, with every change recorded.</p><p>Create a candidate weight edit aimed at the identified failure. Retain the original model and an edit log so the candidate can be compared, rejected, or reversed.</p></div><dl class="walkthrough-facts"><div><dt>Input</dt><dd>The candidate mechanism and original model weights.</dd></div><div><dt>Output</dt><dd>An edited candidate and a record of its changes.</dd></div><div><dt>Question</dt><dd>Is the proposed change focused on the observed failure?</dd></div></dl></section>
+<section class="walkthrough-panel" id="step-validate" aria-labelledby="stage-title-2"><div class="walkthrough-main"><span class="step-name">Validate</span><h2 id="stage-title-2">Test beyond the example.</h2><p class="walkthrough-summary">Fixing the example is not enough. The edited model has to face independent tests.</p><p>Evaluate accuracy, susceptibility to misleading prompts, and performance on unaffected tasks. If the candidate fails the agreed checks, return to repair or reject it; do not promote it as a success.</p></div><dl class="walkthrough-facts"><div><dt>Input</dt><dd>The original and edited models, plus held-out tests.</dd></div><div><dt>Output</dt><dd>A comparison of the target behavior and regressions.</dd></div><div><dt>Question</dt><dd>Does the evidence justify keeping the edit?</dd></div></dl></section>
+<section class="walkthrough-panel" id="step-report" aria-labelledby="stage-title-3"><div class="walkthrough-main"><span class="step-name">Report</span><h2 id="stage-title-3">Explain what changed.</h2><p class="walkthrough-summary">Make the outcome legible to the people responsible for the workflow.</p><p>Describe the behaviors that improved or worsened, the potential clinical consequences, the edit history, and unresolved risks. The report supports review; it does not certify that a model is safe.</p></div><dl class="walkthrough-facts"><div><dt>Input</dt><dd>Independent evaluation results and the edit history.</dd></div><div><dt>Output</dt><dd>A report for technical and clinical review.</dd></div><div><dt>Question</dt><dd>What is the remaining risk, and what still needs testing?</dd></div></dl></section>
+</div>
+        <div class="walkthrough-navigation" hidden><button type="button" id="previous-stage">← Previous</button><p id="walkthrough-status" role="status" aria-live="polite">Audit stage selected</p><button type="button" id="next-stage">Next stage →</button></div>
+      </section>
+      <section class="content-split"><h2 data-scroll-highlight>A failed check<br>means another look.</h2><div class="prose"><p>The validation stage is a decision point. A candidate that improves one example but introduces new failures does not count as a successful repair.</p><p>The intended loop is repair, test independently, then either revise the edit or report the evidence for review. A small edit still needs a thorough evaluation.</p><div class="feedback-loop" aria-label="Repair leads to validation; failed checks return to repair"><span>Repair</span><span aria-hidden="true">⇄</span><span>Validate</span></div></div></section>
+      <section class="content-section green-section"><div class="content-heading"><h2 data-scroll-highlight>What a useful<br>report should explain.</h2><p>Three views of the same error, informed by the clinical-impact framework.</p></div><div class="principle-grid"><article><h3>Technical</h3><p>How often did the error occur? Compare accuracy, false positives, false negatives, and changes on independent test sets.</p></article><article><h3>Clinical context</h3><p>What did the model miss or misclassify? Describe the finding or behavior, rather than reporting only a score.</p></article><article><h3>Patient impact</h3><p>Could the error delay a diagnosis, trigger extra review, or change treatment? Make the interpretation and uncertainty explicit.</p></article></div><a class="source-link" href="https://www.nature.com/articles/s41746-024-01093-w">Evans &amp; Snead, 2024 ↗</a></section>
+      <section class="content-split"><h2 data-scroll-highlight>What we still<br>need to prove.</h2><div class="prose"><p>The cited research shows that weight inspection can detect sycophancy in small models. It does not yet establish that weight editing repairs clinical sycophancy.</p><p>That is the hypothesis Hippo aims to test. This walkthrough contains no measured Hippo outcomes.</p><a class="pill-link" href="pitch.html#evidence">Explore the research <span aria-hidden="true">↗</span></a></div></section>
+
+    </main>
+  <footer class="site-footer">
+    <a class="footer-brand" href="index.html" aria-label="Hippo home"><span class="footer-wordmark"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg?v=355af9359596" alt="" width="220" height="220"><span>Hippo</span></span><span aria-hidden="true">↗</span></a>
+    <div class="footer-meta"><span>© 2026 Hippo</span><span>Researching surgical repair for clinical AI.</span><a href="pitch.html#sources">Research &amp; sources ↗</a></div>
+  </footer>
+  </body>
+</html>
