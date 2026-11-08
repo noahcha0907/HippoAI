@@ -2,16 +2,27 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="assets/hippo-logo-pink-filled.svg?v=355af9359596">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hippo</title>
-    <link rel="stylesheet" href="assets/styles.css?v=da9d8279333b">
+    <meta name="description" content="Hippo explores targeted weight-space repair for healthcare AI, with independent validation and reporting focused on patient impact.">
+    <title>Surgical repair for clinical AI — Hippo</title>
+    <link rel="stylesheet" href="assets/styles.css?v=c7ae2e4a04d8">
+    <script src="assets/header.js?v=be2eb2310638" defer></script>
     <script src="assets/rain.js?v=195afca5e3a3" defer></script>
     <script src="assets/parallax.js?v=1e7369738819" defer></script>
-    <script src="assets/header.js?v=be2eb2310638" defer></script>
-</head>
+  </head>
   <body>
-    <header class="site-header"><a class="brand" href="index.html" aria-label="Hippo home"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg?v=355af9359596" alt="" width="220" height="220"><span>Hippo</span></a><nav aria-label="Main navigation"><a href="index.html" aria-current="page">Home</a><a href="about.html">About Us</a><a href="demo.html">Demo</a><a href="mission.html">Mission</a></nav></header>
-    <main id="main">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Hippo home"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg?v=355af9359596" alt="" width="220" height="220"><span>Hippo</span></a>
+    <nav aria-label="Main navigation">
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="demo.html">Demo</a>
+        <a href="pitch.html">Pitch</a>
+    </nav>
+  </header>
+    <main id="main" class="content-site">
       <section class="hero" aria-labelledby="hero-title">
         <div class="rain-field">
           <canvas id="rain" role="img" aria-label="A five-column, three-row grid of animated impact ripples"></canvas>
@@ -33,33 +44,32 @@
             <span></span>
           </div>
         </div>
-        <h1 id="hero-title"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg?v=355af9359596" alt="" width="220" height="220"><span>HIPPO</span></h1>
+        <h1 id="hero-title" aria-label="Hippo"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg?v=355af9359596" alt="" width="220" height="220"><span>Hippo</span></h1>
       </section>
       <p id="rain-status" role="status" hidden></p>
-<section id="evidence" class="original-content original-section">
-<h2>Evidence &amp; Statistics</h2>
-<div class="original-cards original-metrics"><article>
-              <div class="stat-value">[XX%]</div>
-              <div class="stat-label">Reduction in clinical agent error rate</div></article><article>
-              <div class="stat-value">[XX%]</div>
-              <div class="stat-label">Faster repair cycle vs. manual review</div></article><article>
-              <div class="stat-value">[N]</div>
-              <div class="stat-label">Clinical agent types validated against</div></article><article>
-              <div class="stat-value">[XX%]</div>
-              <div class="stat-label">Of flagged errors auto-repaired</div></article></div><div class="original-sources"><p><strong>[Study / source placeholder 1]</strong> — one-line finding supporting why small clinical AI agents need automated repair.</p><p><strong>[Study / source placeholder 2]</strong> — one-line finding on the cost or risk of unrepaired model drift/errors in clinical settings.</p><p><strong>[Study / source placeholder 3]</strong> — one-line finding on weight-space repair techniques vs. retraining.</p></div></section>
-<section class="original-content original-section"><h2>Learn More About HIPPO</h2><div class="original-cards"><article>
-              <h3>About Us</h3>
-              <p>Who's building HIPPO and why.</p>
-              <a href="about.html">Go to About Us &rarr;</a>
-            </article><article>
-              <h3>Demo</h3>
-              <p>Walk through HIPPO repairing a clinical agent live.</p>
-              <a href="demo.html">Go to Demo &rarr;</a>
-            </article><article>
-              <h3>Mission</h3>
-              <p>What we're trying to change in clinical AI safety.</p>
-              <a href="mission.html">Go to Mission &rarr;</a>
-            </article></div></section>
+      <section class="content-split home-intro">
+        <h2>Surgical repair<br>for clinical AI.</h2>
+        <div class="prose"><p>One failure can undermine an otherwise useful model. Hippo explores how to locate the weights behind that failure, make a targeted edit, and test what changed.</p><p>Our proposed pipeline connects model auditing with independent validation and a report clinicians can understand. The goal is to make specific repairs without a full retrain.</p><a class="pill-link" href="pitch.html">Read the pitch <span aria-hidden="true">↗</span></a></div>
+      </section>
+      <section id="evidence" class="content-section">
+        <div class="content-heading"><h2>The research<br>behind the idea.</h2><p>These are findings from independent studies, not Hippo performance results.</p></div>
+        <div class="research-grid">
+          <article class="research-card wine-card"><div class="research-number">23.9<span>points</span></div><h3>Accuracy can give way to agreement.</h3><p>Qwen3-8B fell from 77.5% to 53.6% on MedQA when a user claimed medical expertise and suggested a wrong answer.</p><a class="source-link" href="https://arxiv.org/html/2601.18334v1#A1">Christophe et al., 2026 ↗</a></article>
+          <article class="research-card pink-card"><div class="research-number">3<span>parameters</span></div><h3>A small edit can make a difference.</h3><p>A radiotherapy-network study located and repaired 16 of 18 planted flaws, changing a median of three parameters per repair.</p><a class="source-link" href="https://arxiv.org/abs/2611.05341">Nusrat &amp; Nusrat, 2026 ↗</a></article>
+          <article class="research-card green-card"><div class="research-number">0.016<span>% of weights</span></div><h3>Targeted repair has a proof point.</h3><p>A Qwen3.5-0.8B edit reduced reasoning loops and raised MATH-500 accuracy from 7.9% to 48.1%. This was a non-clinical experiment.</p><a class="source-link" href="https://rikiyat.github.io/blog/weight-space-programming/">Takehi et al., 2026 ↗</a></article>
+        </div>
+      </section>
+      <section class="content-section workflow-section">
+        <div class="content-heading"><h2>Find it. Fix it.<br>Test it.</h2><a class="text-link" href="demo.html">Explore the workflow ↗</a></div>
+        <div class="workflow-grid"><article><h3>Audit</h3><p>Investigate which weights may be driving a known failure.</p></article><article><h3>Repair</h3><p>Propose a small edit and record exactly what changes.</p></article><article><h3>Validate</h3><p>Use independent tests to check the fix and look for regressions.</p></article><article><h3>Report</h3><p>Explain the errors, their potential impact, and the risk that remains.</p></article></div>
+      </section>
+      <section class="content-split green-section"><h2>Count the errors.<br>Understand the harm.</h2><div class="prose"><p>A missed cancer and a missed mild inflammation may both count as one false negative. Their consequences can be very different.</p><p>Hippo’s reporting approach is informed by research that connects technical errors to pathology and clinical impact. That context matters as much as the score.</p><a class="source-link" href="https://www.nature.com/articles/s41746-024-01093-w">Evans &amp; Snead, 2024 ↗</a></div></section>
+      <section class="content-section explore-section"><h2>Explore Hippo.</h2><div class="page-links"><a href="about.html"><span>About Us</span><span aria-hidden="true">↗</span></a><a href="demo.html"><span>Demo</span><span aria-hidden="true">↗</span></a><a href="pitch.html"><span>Pitch</span><span aria-hidden="true">↗</span></a></div></section>
+
     </main>
+  <footer class="site-footer">
+    <a class="footer-brand" href="index.html" aria-label="Hippo home"><span class="footer-wordmark"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg?v=355af9359596" alt="" width="220" height="220"><span>Hippo</span></span><span aria-hidden="true">↗</span></a>
+    <div class="footer-meta"><span>© 2026 Hippo</span><span>Researching surgical repair for clinical AI.</span><a href="pitch.html#sources">Research &amp; sources ↗</a></div>
+  </footer>
   </body>
 </html>
