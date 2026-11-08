@@ -88,8 +88,16 @@
       const start = window.innerHeight * 0.85;
       const end = window.innerHeight * 0.35;
       const travel = Math.max(1, start - end);
-      const progress = sections.map(({ heading }) => reduced.matches ? 1 :
-        Math.max(0, Math.min(1, (start - heading.getBoundingClientRect().top) / travel)));
+      const progress = sections.map(({ heading }) => {
+        if (reduced.matches) return 1;
+        const top = heading.getBoundingClientRect().top;
+        // Opening subtitles are already in view on arrival. Begin their wipe
+        // at their own unscrolled position so no characters are skipped.
+        const entry = heading.closest('.page-masthead')
+          ? Math.min(start, top + window.scrollY)
+          : start;
+        return Math.max(0, Math.min(1, (entry - top) / travel));
+      });
       sections.forEach(({ characters, previousFill }, sectionIndex) => {
         const read = progress[sectionIndex] * characters.length;
         characters.forEach((character, index) => {

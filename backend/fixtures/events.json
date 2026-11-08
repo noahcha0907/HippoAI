@@ -1,0 +1,54 @@
+{
+  "mock": true,
+  "repair_id": "replaced-at-runtime",
+  "is_replay": false,
+  "events": [
+    { "seconds": 0.0, "kind": "stage", "title": "Stage: baseline", "detail": { "stage": "baseline" } },
+    { "seconds": 4.0, "kind": "thinking", "title": "Fixer's reasoning", "detail": { "text": "MOCK TEXT: placeholder reasoning." } },
+    {
+      "seconds": 20.0,
+      "kind": "forward_pass",
+      "title": "Scored the model on dev questions",
+      "detail": {
+        "suite": "clinical",
+        "unedited": { "accuracy": 0.66, "answer_letters": { "A": 14, "B": 61, "C": 9, "D": 16 } },
+        "edited": { "accuracy": 0.66, "answer_letters": { "A": 14, "B": 61, "C": 9, "D": 16 } },
+        "by_category": {}
+      }
+    },
+    {
+      "seconds": 45.0,
+      "kind": "attribution",
+      "title": "Measured which layers push which answer",
+      "detail": {
+        "answer_letters": { "A": 14, "B": 61, "C": 9, "D": 16 },
+        "components": [
+          { "component": "MOCK layer 14 mlp", "push_by_letter": { "A": -1.9, "B": 5.9, "C": -2.0, "D": -2.0 }, "favors": "B", "strength": 5.9 },
+          { "component": "MOCK layer 15 mlp", "push_by_letter": { "A": 1.4, "B": -0.5, "C": -0.4, "D": -0.5 }, "favors": "A", "strength": 1.4 }
+        ]
+      }
+    },
+    { "seconds": 70.0, "kind": "python", "title": "Ran analysis code", "detail": { "code": "MOCK: print(1)", "output": "MOCK: 1" } },
+    {
+      "seconds": 120.0,
+      "kind": "attempt",
+      "title": "Attempt 1: accepted",
+      "detail": {
+        "number": 1,
+        "summary": "MOCK TEXT: placeholder edit summary.",
+        "tensors_touched": ["MOCK layer 14 down_proj"],
+        "weights_changed": 1946451,
+        "weights_changed_pct": 0.22,
+        "outcome": "accepted",
+        "reasons": [],
+        "scores": { "broken_clinical": 0.66, "edited_clinical": 0.85, "random_control_clinical": 0.66, "collateral_loss": 0.0, "half_strength_clinical": 0.75 }
+      }
+    },
+    {
+      "seconds": 130.0,
+      "kind": "finish",
+      "title": "Finished and reported",
+      "detail": { "conclusion": "repaired", "cause": "MOCK TEXT: placeholder cause.", "located_regions": [] }
+    }
+  ]
+}

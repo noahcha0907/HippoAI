@@ -1,0 +1,120 @@
+{
+  "mock": false,
+  "id": "repair-898da729",
+  "model_id": "t2-a",
+  "complaint": "It's giving wrong answers on clinical triage and dosing questions.",
+  "stage": "awaiting_decision",
+  "elapsed_minutes": 72.41,
+  "forward_passes_used": 4,
+  "budget": {
+    "max_minutes": 30,
+    "max_forward_passes": 12
+  },
+  "located_regions": [],
+  "attempts": [
+    {
+      "number": 1,
+      "summary": "Rank-1 edit on layer 14 MLP down_proj to remove B-preference direction. The edit zeros out the component of the MLP output along the direction that (at answer position) pushes logits toward B and away from A/C/D, for both the average MLP input and its negation.",
+      "tensors_touched": [
+        "model.language_model.layers.14.mlp.down_proj.weight"
+      ],
+      "weights_changed": 931431,
+      "weights_changed_pct": 0.0841199256980439,
+      "dev_metrics": {
+        "clinical_accuracy": 0.67,
+        "broken_clinical_accuracy": 0.66,
+        "random_control_accuracy": 0.65,
+        "collateral_loss": 0.0,
+        "random_control_collateral": 0.0,
+        "general_net_change": 0.0,
+        "medmcqa_accuracy": null
+      },
+      "outcome": "rolled_back",
+      "reason": "Clinical gain 0.010 is below 0.030; No dose-response: the half-strength edit isn't between broken and full strength"
+    },
+    {
+      "number": 2,
+      "summary": "Stronger rank-1 edit (k=10) on layer 14 MLP down_proj to remove B-preference direction. The edit reduces the component along the direction that pushes logits toward B at answer position, scaled up to have a measurable effect.",
+      "tensors_touched": [
+        "model.language_model.layers.14.mlp.down_proj.weight"
+      ],
+      "weights_changed": 2492610,
+      "weights_changed_pct": 0.225114010586078,
+      "dev_metrics": {
+        "clinical_accuracy": 0.72,
+        "broken_clinical_accuracy": 0.66,
+        "random_control_accuracy": 0.66,
+        "collateral_loss": 0.02,
+        "random_control_collateral": 0.0,
+        "general_net_change": 0.039999999999999994,
+        "medmcqa_accuracy": null
+      },
+      "outcome": "rolled_back",
+      "reason": "No dose-response: the half-strength edit isn't between broken and full strength"
+    },
+    {
+      "number": 3,
+      "summary": "Rank-1 edit (k=5) on layer 14 MLP down_proj to remove B-preference direction. This strength showed better performance (0.75) in the previous half-strength test.",
+      "tensors_touched": [
+        "model.language_model.layers.14.mlp.down_proj.weight"
+      ],
+      "weights_changed": 2043407,
+      "weights_changed_pct": 0.18454533401922718,
+      "dev_metrics": {
+        "clinical_accuracy": 0.75,
+        "broken_clinical_accuracy": 0.66,
+        "random_control_accuracy": 0.65,
+        "collateral_loss": 0.01,
+        "random_control_collateral": 0.0,
+        "general_net_change": 0.009999999999999995,
+        "medmcqa_accuracy": null
+      },
+      "outcome": "accepted",
+      "reason": "Passed the dev gate"
+    },
+    {
+      "number": 4,
+      "summary": "Combined edits: 1) Stronger rank-1 edit (effective k~12) on layer 14 MLP down_proj to further reduce B-preference push (was 4.4 after first edit). 2) Rank-1 edit (k=5) on layer 22 linear_attention out_proj to reduce its B push (1.046).",
+      "tensors_touched": [
+        "model.language_model.layers.14.mlp.down_proj.weight",
+        "model.language_model.layers.22.linear_attn.out_proj.weight"
+      ],
+      "weights_changed": 3272607,
+      "weights_changed_pct": 0.2955575428334448,
+      "dev_metrics": {
+        "clinical_accuracy": 0.33,
+        "broken_clinical_accuracy": 0.66,
+        "random_control_accuracy": 0.65,
+        "collateral_loss": 0.06,
+        "random_control_collateral": 0.005,
+        "general_net_change": -0.060000000000000005,
+        "medmcqa_accuracy": null
+      },
+      "outcome": "rolled_back",
+      "reason": "Clinical gain -0.330 is below 0.030; Only -0.320 better than a random edit of the same size; Collateral loss 0.060 exceeds a random edit's 0.005 by more than 0.020; General-knowledge score fell by 0.060; No dose-response: the half-strength edit isn't between broken and full strength"
+    },
+    {
+      "number": 5,
+      "summary": "Add rank-1 edit (k=20) on layer 22 linear_attention out_proj to reduce its B push (1.046), while keeping the accepted k=5 edit on layer 14 MLP down_proj. The layer 22 edit targets the B-preference direction with a stronger coefficient since its c was small.",
+      "tensors_touched": [
+        "model.language_model.layers.14.mlp.down_proj.weight",
+        "model.language_model.layers.22.linear_attn.out_proj.weight"
+      ],
+      "weights_changed": 2811027,
+      "weights_changed_pct": 0.25387106761015604,
+      "dev_metrics": {
+        "clinical_accuracy": 0.36,
+        "broken_clinical_accuracy": 0.66,
+        "random_control_accuracy": 0.65,
+        "collateral_loss": 0.065,
+        "random_control_collateral": 0.0,
+        "general_net_change": -0.065,
+        "medmcqa_accuracy": null
+      },
+      "outcome": "rolled_back",
+      "reason": "Clinical gain -0.300 is below 0.030; Only -0.290 better than a random edit of the same size; Collateral loss 0.065 exceeds a random edit's 0.000 by more than 0.020; General-knowledge score fell by 0.065; No dose-response: the half-strength edit isn't between broken and full strength"
+    }
+  ],
+  "is_replay": true,
+  "error": null
+}

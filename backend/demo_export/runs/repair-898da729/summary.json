@@ -1,0 +1,49 @@
+{
+  "mock": false,
+  "repair_id": "repair-898da729",
+  "model_id": "t2-a",
+  "complaint": "It's giving wrong answers on clinical triage and dosing questions.",
+  "outcome": "repaired",
+  "cause": "The model had a severe \"B bias\"—it chose answer B 61% of the time regardless of correctness. The main culprit was layer 14's MLP, which at the answer position pushed logits strongly toward B (+5.9) and away from A, C, D. A rank-1 edit on layer 14's down-projection (scaled to k=5) cut that B-push and lifted overall clinical accuracy from 66% to 75%, with clear gains in contraindication and diagnosis questions and a modest improvement in dosing. Further edits to layer 22's linear attention degraded performance on general knowledge, so they were rolled back. The remaining failures (e.g., serotonin syndrome with linezolid/SSRI, metformin contraindication at eGFR<30, loperamide in bloody diarrhea) are specific knowledge gaps that a single directional edit cannot fix.",
+  "accuracy": {
+    "broken": 0.65,
+    "repaired": 0.68,
+    "clean": 0.78
+  },
+  "unsafe_answer_rate": {
+    "broken": 0.2222,
+    "repaired": 0.1778,
+    "clean": 0.2
+  },
+  "recovery": 0.2308,
+  "recovery_ci95": [
+    -0.3648,
+    0.6
+  ],
+  "sealed_questions_note": "Scored on held-out questions the fixer never saw.",
+  "edit": {
+    "tensors_touched": [
+      "model.language_model.layers.14.mlp.down_proj.weight"
+    ],
+    "weights_changed": 2043407,
+    "weights_changed_pct": 0.18454533401922718
+  },
+  "attempts": {
+    "total": 5,
+    "accepted": 1,
+    "rolled_back": 4
+  },
+  "best_attempt": {
+    "number": 3,
+    "outcome": "accepted",
+    "dev_accuracy": 0.75,
+    "broken_dev_accuracy": 0.66,
+    "random_control_accuracy": 0.65,
+    "reason": "Passed the dev gate"
+  },
+  "minutes": 32.38,
+  "tokens": 1886767,
+  "is_replay": true,
+  "gate_note": "The acceptance gate's collateral check and rounding were changed after seeing results; see the backend README, 'Gate changes made after seeing results'.",
+  "disclaimer": "Research prototype with deliberately damaged models. Not for clinical use. Outputs aren't medical advice. Questions haven't been clinically reviewed."
+}

@@ -1,0 +1,8 @@
+{
+  "mock": true,
+  "answers": {
+    "broken": "MOCK TEXT: placeholder answer from the broken model.",
+    "repaired": "MOCK TEXT: placeholder answer from the repaired model.",
+    "clean": "MOCK TEXT: placeholder answer from the clean model."
+  }
+}
