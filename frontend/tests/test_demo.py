@@ -83,6 +83,7 @@ class DemoTests(unittest.TestCase):
         self.page.on('pageerror', lambda error: self.errors.append(str(error)))
         self.page.goto(self.url)
         expect(self.page.locator('#run-caption')).to_contain_text('b6e81501-ff50-4322-a2e0-cc514ba1d475')
+        self.page.locator('#full-experiment > summary').click()
         self.page.locator('#clear-replay').click()
 
     def tearDown(self):
@@ -111,6 +112,8 @@ class DemoTests(unittest.TestCase):
         destination = os.environ.get('HIPPO_DEMO_SCREENSHOTS')
         if destination:
             target = Path(destination); target.mkdir(parents=True, exist_ok=True)
+            self.page.evaluate('window.scrollTo(0, 0)')
+            self.page.wait_for_timeout(150)
             self.page.screenshot(path=str(target / name), full_page=True)
 
     def test_empty_state_is_honest_and_responsive(self):
@@ -141,6 +144,7 @@ class DemoTests(unittest.TestCase):
     def test_real_run6_autoload_all_outcomes_and_receipts(self):
         self.page.reload()
         expect(self.page.locator('#run-caption')).to_contain_text('b6e81501-ff50-4322-a2e0-cc514ba1d475')
+        self.page.locator('#full-experiment > summary').click()
         expect(self.page.locator('#overview-stats')).to_contain_text('5 / 6')
         expect(self.page.locator('#overview-stats')).to_contain_text('30')
         expect(self.page.locator('#overview-note')).to_contain_text('12/12 blind Astra diagnoses abstained')
@@ -170,6 +174,7 @@ class DemoTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256((folder / 'replay.json').read_bytes()).hexdigest(), provenance['replay_sha256'])
         self.assertEqual(provenance['source_files_verified_at_packaging'], 570)
         self.assertEqual(len(provenance['included_source_files']), 25)
+        self.page.locator('#clinical-experiment > summary').click()
         expect(self.page.locator('#live-demo .ld-meta')).not_to_contain_text('Loading run')
         self.page.locator('#ld-ask-1').click()
         expect(self.page.locator('#ld-answer-1')).not_to_be_empty()
@@ -179,6 +184,28 @@ class DemoTests(unittest.TestCase):
         expect(self.page.locator('#ld-ask-2')).to_be_enabled()
         self.page.locator('#ld-ask-2').click()
         expect(self.page.locator('#ld-answer-2')).not_to_be_empty()
+
+    def test_concise_intro_keeps_real_outcomes_and_opens_details(self):
+        self.page.reload()
+        expect(self.page.locator('#headline-result .spotlight-count')).to_have_text('5/ 6')
+        expect(self.page.locator('#headline-result')).to_contain_text('6 edits retained from 30 candidates')
+        expect(self.page.locator('#headline-result')).to_contain_text('1 edited comparison did not meet')
+        expect(self.page.locator('#headline-result')).to_contain_text('Mean accuracy gain +1.5 pp')
+        expect(self.page.locator('#headline-result')).to_contain_text('Mean accuracy gain +0.7 pp')
+        expect(self.page.locator('#replay')).to_be_hidden()
+        expect(self.page.locator('#live-demo')).to_be_hidden()
+        self.screenshot('concise-desktop.png')
+        for width in (320,390,768):
+            self.page.set_viewport_size({'width':width,'height':844})
+            self.assertTrue(self.page.evaluate('document.documentElement.scrollWidth <= innerWidth'),width)
+        self.page.set_viewport_size({'width':390,'height':844})
+        self.screenshot('concise-mobile.png')
+        self.page.locator('#show-edits').click()
+        expect(self.page.locator('#replay-repair')).to_be_visible()
+        expect(self.page.locator('#edit-history .edit-row')).to_have_count(5)
+        self.page.locator('#full-experiment > summary').click()
+        self.page.locator('#show-results').click()
+        expect(self.page.locator('#replay-validate')).to_be_visible()
 
     def test_partial_does_not_substitute_development_scores(self):
         report = fixture(); report['status'] = 'failed'; report['final_evaluation_started'] = False

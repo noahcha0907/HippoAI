@@ -161,3 +161,9 @@ Astra B regressed on seed 2. Preserve these mixed outcomes in any pitch.
 The final session was inspected in an earlier run, making this exploratory.
 The newer clinical-model replay from main remains a separate demonstration
 below the EEG replay; its results must not be attributed to the EEG experiment.
+
+The demo presentation now leads with "Can AI repair another AI?", a compact
+5/6 comparison card with A/B effect sizes and the unsuccessful comparison, and
+three plain-language problem/edit/check steps. The scope caveat remains visible.
+Technical details and the separate clinical replay are expandable, keeping the
+initial presentation short without removing evidence or changing any results.

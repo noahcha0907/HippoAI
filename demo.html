@@ -12,9 +12,9 @@
       <script src="assets/scroll-highlights.js?v=b1e8af2900aa" defer></script>
     <script src="assets/section-reveal.js?v=efe101bc3adf" defer></script>
     <script src="assets/live-demo.js?v=2" defer></script>
-    <link rel="stylesheet" href="assets/demo.css?v=run6">
+    <link rel="stylesheet" href="assets/demo.css?v=run6-short">
   <script src="assets/demo-data.js?v=run6" defer></script>
-  <script src="assets/demo.js?v=run6" defer></script>
+  <script src="assets/demo.js?v=run6-short" defer></script>
 </head>
 <body class="replay-page">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -23,11 +23,27 @@
     <nav aria-label="Main navigation"><a href="index.html">Home</a><a href="about.html">About Us</a><a href="demo.html" aria-current="page">Demo</a><a href="pitch.html">Pitch</a></nav>
   </header>
   <main id="main">
-    <section class="replay-hero">
-      <div class="replay-eyebrow"><span class="status-dot"></span> THE EXPERIMENT ROOM <span class="mode-label">Saved evidence replay</span></div>
-      <h1>A small edit.<br>A testable difference.</h1>
-      <div class="hero-bottom-line"><p>Real EEG recordings. Planted shortcuts. Small weight edits tested against controls. Explore the completed run6 experiment and its limits.</p><a href="#replay" class="jump-link">Explore the evidence <span aria-hidden="true">↓</span></a></div>
+    <section class="demo-intro" aria-labelledby="demo-title">
+      <div class="intro-copy"><span class="small-label">HIPPO / A REAL EEG EXPERIMENT</span>
+        <h1 id="demo-title">Can AI repair<br>another AI?</h1>
+        <p>We gave a small brain-signal model a misleading blink cue. Then we asked Astra to reduce its reliance on that shortcut with tiny weight edits.</p>
+        <div class="intro-actions"><button type="button" id="show-edits" class="action-button primary">See the edits <span aria-hidden="true">&rarr;</span></button><button type="button" id="show-results" class="text-button">Compare results</button></div>
+        <span class="intro-caption">Real saved results. No training runs during the demo.</span>
+      </div>
+      <article class="result-spotlight" aria-labelledby="spotlight-heading">
+        <span class="small-label">THE RESULT</span><h2 id="spotlight-heading">A promising first step.</h2>
+        <div id="headline-result" aria-live="polite"><p>Loading the recorded results...</p></div>
+        <p class="spotlight-rule">Passing means better accuracy when the cue changes, fewer artifact-driven prediction changes, and preservation checks passed.</p>
+      </article>
     </section>
+    <section class="experiment-story" aria-label="How the experiment works">
+      <article><span class="story-number">01 / THE PROBLEM</span><h2>A misleading cue.</h2><p>A blink pattern was linked to a label during training. We changed that link to test whether the model relied on it.</p></article>
+      <article><span class="story-number">02 / THE EDIT</span><h2>Change a few weights.</h2><p>Astra used the weights and development-test feedback to propose edits. Each candidate was tested on a copy.</p></article>
+      <article><span class="story-number">03 / THE CHECK</span><h2>Keep useful behavior.</h2><p>We compared the selected edits with the unchanged model and simple controls on a separate recording session.</p></article>
+    </section>
+    <p class="study-scope">Early evidence from one person and three training seeds. The final session had been inspected before this follow-up; broader validation is next.</p>
+    <details id="full-experiment" class="experiment-drawer">
+      <summary><span>Explore the full experiment<small>All models, controls and edit history</small></span><span aria-hidden="true">+</span></summary>
     <section class="replay-shell" id="replay" aria-label="EEG experiment replay">
       <div class="replay-topbar"><span class="mono">HIPPO / EEG AUDIT</span><span id="source-badge" class="source-badge">Awaiting evidence</span></div>
       <div class="evidence-loader">
@@ -85,8 +101,9 @@
       </div>
       <div class="replay-footnote"><span id="run-caption">Your evidence stays in this browser tab.</span><span>Recorded results · no live training</span></div>
     </section>
-    <section class="demo-context"><div><span class="small-label">WHY EEG?</span><h2>A shortcut we can<br>actually test.</h2></div><div><p>We deliberately correlate an artifact with a label in a small EEG classifier. Then we change or remove that cue and measure what happens.</p><p>Astra inspects the weights, proposes a diagnosis, and may suggest a bounded edit. Unchanged models, random edits, signal rules, and input filtering provide comparison points.</p><p class="detail-note">This is a research experiment on planted shortcuts. It does not establish clinical safety or patient benefit.</p></div></section>
-  <section class="demo-context" id="clinical-replay"><div><span class="small-label">SEPARATE EXPERIMENT</span><h2>Clinical model replay.</h2></div><div><p>This recorded language-model repair is a different experiment from the EEG audit above. Its questions, model and metrics are separate.</p></div></section>
+    </details>
+    <details id="clinical-experiment" class="experiment-drawer clinical-drawer">
+      <summary><span>Watch the clinical-model demo<small>A separate experiment: ask, repair, ask again</small></span><span aria-hidden="true">+</span></summary>
       <section class="live-demo" id="live-demo" aria-label="Recorded repair run">
         <div class="ld-head">
           <p class="ld-meta" aria-live="polite"><span>Loading run…</span></p>
@@ -124,6 +141,7 @@
         </div>
       </section>
 
+    </details>
 </main>
   <footer class="site-footer"><a class="footer-brand" href="index.html" aria-label="Hippo home"><span class="footer-wordmark"><img class="hippo-logo" src="assets/hippo-logo-pink-filled.svg?v=355af9359596" alt="" width="220" height="220"><span>Hippo</span></span><span aria-hidden="true">↗</span></a><div class="footer-meta"><span>© 2026 Hippo</span><span>Researching surgical repair for clinical AI.</span><a href="pitch.html#sources">Research &amp; sources ↗</a></div></footer>
 </body>

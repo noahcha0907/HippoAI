@@ -5,6 +5,14 @@ assets. It does not train a model, call Astra or upload local files. The clinica
 language-model replay pulled from main is preserved below it as a separate
 experiment. Synthetic records exist only inside browser tests.
 
+The default view is a short explanation for judges: the question, a compact
+result card, and problem/edit/check steps. The card derives its counts and A/B
+mean swapped-accuracy gains from the loaded report, including the unsuccessful
+comparison. The one-subject/exploratory limitation stays visible. **See the edits**
+and **Compare results** open the relevant stage. **Explore the full experiment**
+contains all imports, selectors, controls and receipts; **Watch the clinical-model
+demo** opens the separate recorded demonstration. Both sections start collapsed.
+
 ## Included EEG result
 
 Run `b6e81501-ff50-4322-a2e0-cc514ba1d475` completed on 2026-11-08: one subject,
@@ -50,7 +58,7 @@ This change has not been published or pushed automatically.
 
 1. Complete the [Colab workflow](../backend/docs/EEG_EXPERIMENT.md), download its
    `kirby-eeg-evidence-<run-id>.zip`, and extract it.
-2. On the demo, choose **Open a saved report** and select that folder's
+2. Expand **Explore the full experiment**, choose **Open a saved report** and select that folder's
    `report.json`. This loads diagnoses, gates, model/method selectors and final
    comparisons. Individual edit receipts are not embedded in report.json.
 3. For the full edit history, use **Choose evidence folder** and select the

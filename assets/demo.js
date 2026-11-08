@@ -220,6 +220,25 @@
     const attempts = entries.reduce((sum, e) => sum + e.saved.attempted_edits, 0);
     const accepted = entries.reduce((sum, e) => sum + e.saved.accepted_edits, 0);
     const diagnoses = report.models.flatMap(m => ['astra_A','astra_B'].map(name => m.diagnoses[name]?.response).filter(Boolean));
+    const headline = $('headline-result'); headline.replaceChildren();
+    const count = element('div', null, 'spotlight-count');
+    count.append(element('strong', tested.length ? String(passed) : '—'), element('span', tested.length ? '/ ' + tested.length : ''));
+    headline.append(count, element('p', 'edited comparisons met all four final checks', 'spotlight-label'));
+    const split = element('div', null, 'spotlight-split');
+    for (const name of ['astra_A', 'astra_B']) {
+      const group = tested.filter(e => e.name === name);
+      const row = element('div');
+      const label = element('span', name === 'astra_A' ? 'A · weights' : 'B · weights + signal views');
+      if (group.length) label.append(element('small', 'Mean accuracy gain ' + D.points(group.reduce((sum,e) => sum + e.result.swapped, 0) / group.length)));
+      row.append(label);
+      const dots = element('span', null, 'result-dots');
+      dots.setAttribute('aria-label', group.filter(e => e.result.meets).length + ' of ' + group.length + ' comparisons met all criteria');
+      group.forEach(e => {const dot = element('span', e.result.meets ? '✓' : '−', e.result.meets ? 'met' : 'missed');
+        dot.title = 'Subject ' + e.m.subject + ', seed ' + e.m.seed + ': ' + (e.result.meets ? 'met all criteria' : 'did not meet all criteria'); dots.append(dot);});
+      row.append(dots); split.append(row);
+    }
+    headline.append(split, element('p', accepted + ' edits retained from ' + attempts + ' candidates. '
+      + (tested.length - passed ? (tested.length - passed) + ' edited comparison did not meet all final checks.' : ''), 'spotlight-detail'));
     $('overview-stats').replaceChildren(...[
       ['Astra candidates tested', attempts], ['Edits accepted on development', accepted],
       ['Edited comparisons meeting final criteria', tested.length ? passed + ' / ' + tested.length : 'Not available']
@@ -276,11 +295,20 @@
       show(result); message('Loaded ' + result.report.models.length + ' recorded models. ' + result.integrity + '.');
     } catch (error) {
       if (request === state.request) message(error.message + (state.data ? ' The previously loaded run is unchanged.' : ''), true);
+      if (!state.data) put('headline-result', 'Results could not be loaded. Open the full experiment to load a saved report.');
     } finally {
       if (request === state.request) { $('open-report').disabled = false; $('open-folder').disabled = false; }
     }
   }
   $('open-report').addEventListener('click', () => $('report-file').click());
+  for (const [id, index] of [['show-edits', 1], ['show-results', 2]]) {
+    $(id).addEventListener('click', () => {
+      $('full-experiment').open = true;
+      if (state.data && model()) { selectStage(index); buttons[index].focus(); }
+      else $('open-report').focus();
+    });
+  }
+  $('full-experiment').addEventListener('toggle', () => { if (!$('full-experiment').open) pause(); });
   async function bundled() {
     const response = await fetch('assets/evidence/run6/replay.json');
     if (!response.ok) throw new Error('The included run could not be loaded. Open a saved report or try again.');
@@ -326,6 +354,7 @@
   });
   $('clear-replay').addEventListener('click', () => {
     pause(); state.request++; state.data = null;
+    put('headline-result', 'No results selected. Load the included run or another saved report below.');
     $('workspace').hidden = true; $('empty-state').hidden = false;
     $('open-report').disabled = false; $('open-folder').disabled = false;
     put('source-badge', 'Awaiting evidence'); put('loader-title', 'Start with the evidence.');
