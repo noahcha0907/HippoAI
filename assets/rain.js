@@ -84,6 +84,7 @@
   gl.useProgram(program); gl.enable(gl.BLEND); gl.blendFunc(gl.DST_COLOR, gl.ZERO);
   gl.clearColor(1, 1, 1, 1);
   const SIZE = 320, STEP = 1 / 120;
+  let columns = 5, rows = 3;
   let cells = [], time = 0, accumulator = 0, previous = 0, animation = 0;
   let paused = reduced.matches, visible = true, lost = false;
   function reset() {
@@ -115,13 +116,16 @@
   function draw() {
     const dpr = Math.min(devicePixelRatio || 1, 1.5);
     // Integer tile size ensures every cell is a square, without seams.
-    const side = Math.max(1, Math.round(canvas.parentElement.clientWidth * dpr / 5));
-    if (canvas.width !== side * 5 || canvas.height !== side * 3) {
-      canvas.width = side * 5; canvas.height = side * 3;
+    const floorStyle = getComputedStyle(canvas.parentElement);
+    columns = Number(floorStyle.getPropertyValue('--rain-columns')) || 5;
+    rows = Number(floorStyle.getPropertyValue('--rain-rows')) || 3;
+    const side = Math.max(1, Math.round(canvas.parentElement.clientWidth * dpr / columns));
+    if (canvas.width !== side * columns || canvas.height !== side * rows) {
+      canvas.width = side * columns; canvas.height = side * rows;
     }
     gl.disable(gl.SCISSOR_TEST); gl.clear(gl.COLOR_BUFFER_BIT); gl.enable(gl.SCISSOR_TEST);
     cells.forEach((cell, i) => {
-      const x = (i % 5) * side, y = (2 - Math.floor(i / 5)) * side;
+      const x = (i % columns) * side, y = (rows - 1 - Math.floor(i / columns)) * side;
       gl.viewport(x, y, side, side); gl.scissor(x, y, side, side);
       gl.uniform2f(uniforms.resolution, SIZE, SIZE);
       for (const ripple of cell.ripples) {
@@ -149,6 +153,22 @@
     }
     if (active()) { previous = performance.now(); animation = requestAnimationFrame(frame); }
   }
+  // Word landings use normalized floor coordinates, independent of screen size.
+  document.addEventListener('hippo:impact', event => {
+    if (lost || reduced.matches || !cells.length) return;
+    const { x, y } = event.detail || {};
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    const floorX = Math.max(0, Math.min(0.999999, x)) * columns;
+    const floorY = Math.max(0, Math.min(0.999999, y)) * rows;
+    const cell = cells[Math.floor(floorY) * columns + Math.floor(floorX)];
+    if (!cell) return;
+    cell.ripples.push({
+      x: (floorX % 1) * SIZE,
+      y: (1 - floorY % 1) * SIZE,
+      born: time
+    });
+    if (cell.ripples.length > 12) cell.ripples.shift();
+  });
   pause?.addEventListener('click', () => { paused = !paused; sync(); });
   shuffle?.addEventListener('click', () => { reset(); sync(); });
   reduced.addEventListener('change', () => { paused = reduced.matches; sync(); });
