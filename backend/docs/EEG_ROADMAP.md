@@ -5,7 +5,30 @@ a small EEG model's weights, then repair it better than simple controls while
 preserving task performance? Diagnosis from weights and repair with development
 feedback are separate claims. Neither is a clinical validation claim.
 
-## 1. Working research pipeline — implemented, real run pending
+## Current next step: frozen replication on subjects 2 and 3
+
+Run6 is complete: 30 Astra candidates, six development-accepted edits, five of
+six edited comparisons meeting final criteria. All 12 blind diagnoses abstained.
+The result is exploratory, on one previously inspected subject. The frontend
+replays the real report, including regressions and controls.
+
+Use `notebooks/kirby_eeg_replication_colab.ipynb` and the updated
+`dist/kirby_eeg_colab.zip`. The predeclared plan is
+`experiments/eeg_replication_v1.json`: subjects 2 and 3, seeds 0/1/2,
+clean/blink, both A/B, identical run6 procedure and per-model limits. Source
+hashes and settings are checked before the worker starts. Budgets scale to
+144 requests and $100 estimated token cost for 12 models. Failed gates stay
+excluded; do not weaken them to obtain a result. No paid run is launched locally.
+
+Report A and B separately, seed-averaged effects for each subject and the
+equal-weight mean across subjects. Include clean preservation, flip-rate change,
+worst-condition preservation, all controls, exclusions and failures. Retained
+originals have zero gain; missing final outcomes stay missing. Do not choose
+the winning method using final scores. Two new subjects still provide limited
+generalization evidence. Software/provider versions are recorded, not pinned
+to exactly match run6. Keep both old and new evidence archives.
+
+## 1. Working research pipeline — implemented and exercised on Colab
 
 Delivered: explicit BNCI loader and train-fitted preprocessing; EEGNet training;
 clean/blink/hum/muscle conditions; matched counterfactual variants; lossless folded
@@ -62,5 +85,5 @@ expanding that claim. Keep the reproducible audit benchmark and report the negat
 result. Consider richer task evidence only as a newly scoped experiment, not a
 retroactive explanation of a failed weights-only test.
 
-There is no validated EEG outcome yet. The engineering pipeline makes the next
-experiment reviewable; the Colab evidence determines whether the pivot pays off.
+There is an exploratory EEG repair signal from run6. The new-subject replication
+tests whether it repeats beyond the subject used during development.

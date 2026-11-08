@@ -82,6 +82,8 @@ def select_edits(original, versions, data, config, folder, proposal):
         receipt['source_unchanged'] = True
         receipts.append(receipt)
         write_json(folder / 'receipts.json', receipts)
+        print(f'{folder.name}: edit {attempt + 1}/{config.attempts} '
+              f'{"accepted" if receipt["accepted"] else "rejected"}', flush=True)
     write_json(folder / 'receipts.json', receipts)
     return current, current_metrics, receipts
 
@@ -173,6 +175,7 @@ def run(config, output, data_root, *, run_id=None, client_factory=None):
                 entry['diagnoses']['integrated_gradients'] = {'response': response, 'score': score_diagnosis(response, entry['ground_truth'])}
             if config.astra:
                 for condition in config.evidence_conditions:
+                    print(f'Blind diagnosis {entry["model_id"]} / Astra {condition}', flush=True)
                     packet = build_packet(model, entry['model_id'], condition)
                     response = budget.request(packet, str(uuid.uuid4()))
                     entry['diagnoses']['astra_' + condition] = {'response': response, 'score': score_diagnosis(response, entry['ground_truth'])}
@@ -207,11 +210,20 @@ def run(config, output, data_root, *, run_id=None, client_factory=None):
             if config.astra:
                 for condition in config.evidence_conditions:
                     name = 'astra_' + condition
-                    if entry['diagnoses'][name]['response']['diagnosis'] in ('clean', 'uncertain'):
+                    if (config.repair_policy == 'diagnosis_gated'
+                            and entry['diagnoses'][name]['response']['diagnosis'] in ('clean', 'uncertain')):
                         retain(name, original, entry['development'])
                         entry['methods'][name]['stop_reason'] = 'First diagnosis clean or uncertain; no repair attempted'
+                        entry['methods'][name]['repair_policy'] = config.repair_policy
+                        entry['methods'][name]['repair_requests'] = 0
                         continue
+                    repair_state = {'repair_policy': config.repair_policy, 'repair_requests': 0,
+                                    'stop_reason': 'Repair attempt limit reached'}
                     def propose(attempt, current, feedback, condition=condition):
+                        print(f'{name}: requesting repair {attempt + 1}/{config.attempts} '
+                              f'for {entry["model_id"]}', flush=True)
+                        feedback = dict(feedback, repair_policy=config.repair_policy,
+                                        frozen_blind_diagnosis=entry['diagnoses'][name]['response'])
                         packet = build_packet(current, entry['model_id'], condition, task='repair', feedback=feedback)
                         # Preserve the configured tighter bounds if an operator selected them.
                         packet['limits']['attempts'] = config.attempts
@@ -219,9 +231,15 @@ def run(config, output, data_root, *, run_id=None, client_factory=None):
                         packet['limits']['max_clean_drop'] = config.max_clean_drop
                         packet.pop('evidence_sha256')
                         packet['evidence_sha256'] = digest(packet)
-                        return budget.request(packet, str(uuid.uuid4()))['operation']
+                        response = budget.request(packet, str(uuid.uuid4()))
+                        repair_state['repair_requests'] += 1
+                        if response['stop']:
+                            repair_state['stop_reason'] = 'Astra stopped: ' + response['description']
+                            print(f'{name}: Astra stopped without a candidate', flush=True)
+                        return response['operation']
                     model, metrics, receipts = select_edits(original, development_versions, dev, config, folder / name, propose)
                     retain(name, model, metrics, receipts)
+                    entry['methods'][name].update(repair_state)
             if config.extended_baselines:
                 train = load_split(directory, 'train'); validation = load_split(directory, 'validation')
                 model, history = fit(train['x'], train['y'], validation['x'], validation['y'], config, entry['seed'], initial=original, last_layer=True)
@@ -241,6 +259,7 @@ def run(config, output, data_root, *, run_id=None, client_factory=None):
         write_json(root / 'selection-lock.json', lock)
         lock_hash = file_hash(root / 'selection-lock.json')
         if selected:
+            print('All methods frozen; evaluating the final session', flush=True)
             with (root / 'final-started.json').open('x', encoding='utf-8') as marker:
                 marker.write(canonical_json({'selection_lock_sha256': lock_hash, 'started_at': utc_now()}))
             report['final_evaluation_started'] = True

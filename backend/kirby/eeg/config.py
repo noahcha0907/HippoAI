@@ -31,6 +31,7 @@ class EEGConfig:
     paired_prevalence: float = 0.8
     other_prevalence: float = 0.1
     astra: bool = True
+    repair_policy: str = 'feedback_guided'
     extended_baselines: bool = False
     max_api_calls: int = 72
     # Conservative recorded token-price estimate; not an invoice/spend guarantee.
@@ -64,3 +65,5 @@ class EEGConfig:
             raise ValueError('Preservation/edit bounds or prevalence invalid')
         if self.device not in ('auto', 'cpu', 'cuda'):
             raise ValueError('device must be auto, cpu or cuda')
+        if self.repair_policy not in ('diagnosis_gated', 'feedback_guided'):
+            raise ValueError('Unknown repair policy')

@@ -57,7 +57,7 @@ class EEGTests(unittest.TestCase):
             'description': 'Synthetic test response.', 'hypothesis': 'Test the nominated filter.',
             'operation': operation, 'stop': operation is None}
 
-    def factory(self, seen, *, fail=False):
+    def factory(self, seen, *, fail=False, diagnosis='eye_blink', stop_repair=False):
         from kirby.eeg.astra_eeg import EEGAstraClient
         from kirby.astra import AstraConfig, ProviderFailure
         outer = self
@@ -68,8 +68,8 @@ class EEGTests(unittest.TestCase):
                 packet = json.loads(body['input'][0]['content']); seen.append(packet)
                 if fail:
                     raise ProviderFailure('Synthetic provider failure', {'usage_known': False, 'api_calls': 1})
-                operation = {'op': 'scale_temporal_filter', 'filter': 0, 'factor': 0.0} if packet['task'] == 'repair' else None
-                return {'output_text': json.dumps(outer.response(packet, operation=operation)), 'usage_known': True,
+                operation = {'op': 'scale_temporal_filter', 'filter': 0, 'factor': 0.0} if packet['task'] == 'repair' and not stop_repair else None
+                return {'output_text': json.dumps(outer.response(packet, diagnosis=diagnosis, operation=operation)), 'usage_known': True,
                         'usage': {'input_tokens': 100, 'output_tokens': 100, 'cached_input_tokens': 0}}
         return FakeClient
 
@@ -265,7 +265,8 @@ class EEGTests(unittest.TestCase):
                     self.assertFalse((root / 'final-started.json').exists())
                 return load_split(directory, split, **kwargs)
             with patch('kirby.eeg.runner.load_split', side_effect=checked_load):
-                report = run(self.config, base / 'runs', base / 'data', run_id=identity, client_factory=self.factory(seen))
+                report = run(self.config, base / 'runs', base / 'data', run_id=identity,
+                             client_factory=self.factory(seen, diagnosis='uncertain'))
             self.assertEqual(report['status'], 'completed'); self.assertEqual(len(final_loads), 1)
             self.assertEqual([p['task'] for p in seen[:2]], ['diagnose', 'diagnose'])
             self.assertTrue(all(p['task'] == 'repair' for p in seen[2:]))
@@ -273,6 +274,18 @@ class EEGTests(unittest.TestCase):
             for packet in seen:
                 self.assertNotIn('ground_truth', packet); self.assertNotIn('final', packet)
             model = report['models'][0]
+            self.assertEqual(report['config']['repair_policy'], 'feedback_guided')
+            for name in ('astra_A', 'astra_B'):
+                self.assertEqual(model['diagnoses'][name]['response']['diagnosis'], 'uncertain')
+                self.assertTrue(model['diagnoses'][name]['score']['abstained'])
+                self.assertEqual(model['methods'][name]['attempted_edits'], 2)
+                self.assertEqual(model['methods'][name]['repair_requests'], 2)
+            for packet in seen[2:]:
+                feedback = packet['development_feedback']
+                self.assertEqual(feedback['repair_policy'], 'feedback_guided')
+                self.assertEqual(feedback['frozen_blind_diagnosis']['diagnosis'], 'uncertain')
+                self.assertNotIn('ground_truth', json.dumps(feedback))
+                self.assertNotIn('final', json.dumps(feedback))
             self.assertEqual(set(model['methods']), {'no_edit', 'input_filter', 'random', 'rule', 'astra_A', 'astra_B'})
             for method in model['methods'].values():
                 self.assertIn('final', method)
@@ -289,6 +302,27 @@ class EEGTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 run(self.config, base / 'runs', base / 'data', run_id=identity, client_factory=self.factory(seen))
             self.assertEqual(len(seen), 6)
+
+    def test_legacy_abstention_gate_and_feedback_guided_provider_stop(self):
+        from kirby.eeg.runner import run
+        for policy, diagnosis, expected_calls in (
+                ('diagnosis_gated', 'uncertain', 2), ('diagnosis_gated', 'clean', 2),
+                ('feedback_guided', 'uncertain', 4), ('feedback_guided', 'clean', 4)):
+            with self.subTest(policy=policy, diagnosis=diagnosis), tempfile.TemporaryDirectory() as tmp:
+                base = Path(tmp); self.prepared(base / 'data'); seen = []
+                report = run(replace(self.config, repair_policy=policy), base / 'runs', base / 'data',
+                             client_factory=self.factory(seen, diagnosis=diagnosis, stop_repair=True))
+                self.assertEqual(report['api_calls'], expected_calls)
+                model = report['models'][0]
+                for name in ('astra_A', 'astra_B'):
+                    method = model['methods'][name]
+                    self.assertEqual(method['attempted_edits'], 0)
+                    self.assertEqual(method['accepted_edits'], 0)
+                    self.assertEqual(method['model_sha256'], model['original_hash'])
+                    self.assertEqual(method['repair_requests'], int(policy == 'feedback_guided'))
+                    self.assertEqual(method['repair_policy'], policy)
+                    self.assertEqual(model['diagnoses'][name]['response']['diagnosis'], diagnosis)
+                    self.assertIn('Astra stopped' if policy == 'feedback_guided' else 'no repair attempted', method['stop_reason'])
 
     def test_failed_provider_exports_partial_and_never_loads_final(self):
         from kirby.eeg.runner import run

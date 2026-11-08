@@ -21,6 +21,8 @@ def main(argv=None):
     experiment.add_argument('--epochs', type=int, default=300)
     experiment.add_argument('--patience', type=int, default=30)
     experiment.add_argument('--attempts', type=int, default=5)
+    experiment.add_argument('--repair-policy', choices=['diagnosis_gated', 'feedback_guided'], default='feedback_guided',
+                            help='Allow development-guided proposals after any blind diagnosis, or reproduce the legacy diagnosis gate')
     experiment.add_argument('--device', choices=['auto', 'cpu', 'cuda'], default='auto')
     experiment.add_argument('--max-api-calls', type=int, default=72)
     experiment.add_argument('--max-estimated-usd', type=float, default=50)
@@ -35,7 +37,7 @@ def main(argv=None):
     from .runner import run
     config = EEGConfig(subjects=tuple(args.subjects), seeds=tuple(args.seeds), conditions=tuple(args.conditions),
                        evidence_conditions=tuple(args.evidence_conditions), epochs=args.epochs, patience=args.patience,
-                       attempts=args.attempts, device=args.device, max_api_calls=args.max_api_calls,
+                       attempts=args.attempts, repair_policy=args.repair_policy, device=args.device, max_api_calls=args.max_api_calls,
                        max_estimated_usd=args.max_estimated_usd, astra=not args.no_astra,
                        extended_baselines=args.extended_baselines)
     result = run(config, args.output, args.data_root, run_id=args.run_id)

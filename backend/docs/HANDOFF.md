@@ -2,8 +2,79 @@
 
 ## Current task
 
+User authorized the next experiment and pushing the frontend. Prepared a separate
+`kirby_eeg_replication_colab.ipynb` for subjects 2/3, three seeds, clean/blink,
+both A/B; exact run6 procedure source and per-model bounds retained. The plan
+in `experiments/eeg_replication_v1.json` declares analysis and verifies portable
+source hashes/settings before execution. Total budgets 144 requests/$100 estimate.
+The original subject-1 launcher remains available. No paid or real EEG run occurs
+locally; the user executes the new notebook in Colab with the rebuilt source ZIP.
+
+2026-11-08 run6 frontend integration: user requested pulling before integrating.
+Pulled origin/main through `2e0c34e` into leo-grimeland (merge `3e796e2`),
+preserving both backend README guides. Local changes were stashed with untracked
+files, restored, and the demo conflict resolved by retaining the clinical replay
+alongside the EEG replay. The backup stash `codex-before-run6-frontend-pull-2026-11-08`
+is retained. No push or deployment was requested/performed for this integration.
+`demo.html` now loads the real run6 report and all edit receipts automatically
+from `assets/evidence/run6/replay.json`; `frontend/package_eeg_replay.py` verifies
+source hashes and records provenance. Overview includes all six artifact-model
+Astra comparisons, including the seed-2 B regression. See `docs/DEMO_REPLAY.md`.
+All 13 browser tests passed, covering the real bundled results, provenance,
+receipts, preservation failures, import/export and the retained clinical replay.
+Desktop/mobile screenshots were inspected; a clinical selector overflow at
+320px was fixed. Source packaging checked all 570 original file hashes.
+
+2026-11-08: User supplied completed EEG run5 from
+`C:\Users\leogr\Downloads\kirby-eeg-evidence-run5`, run UUID
+`88dba5f4-e935-42d3-b85f-8c4f28f0fe0d`. All six models passed development gates;
+all 12 Astra diagnoses abstained, so the legacy gate made zero repair requests.
+The run completed in about 12 minutes, with $4.88 estimated provider cost.
+Its 318 indexed file hashes and final predictions were checked. Real data also
+loaded successfully in the demo; the earlier "no evidence supplied" note below
+describes the state before this delivery.
+
+User now requests another Colab experiment with Astra edits. The revised default
+`repair_policy=feedback_guided` requests development-guided candidates even after
+clean/uncertain blind diagnoses, while retaining the original responses and all
+acceptance/rollback limits. `diagnosis_gated` remains an explicit legacy option.
+Reports record repair policy, request counts and stop reason. Astra may still
+stop or have every candidate rejected: do not describe this as a successful fix.
+The notebook streams subprocess output and requires a new UUID for the new
+source/settings. Subject 1 repeats are exploratory because prior final outcomes
+have been inspected. No real EEG experiment or paid call is run locally.
+Verification for this revision: all **161 backend CPU tests passed**, including
+uncertain-diagnosis repair attempts, frozen first responses, legacy gating,
+provider stops, exact rollback, final-data ordering and streamed Colab output.
+The rebuilt source ZIP contains 46 files (142,619 bytes).
+
+Colab setup follow-up: the first supplied live error was Python 3.13 failing
+`python -m venv --system-site-packages`, before training or provider calls.
+The builder now creates workers with `--without-pip`, checks the interpreter's
+prefix and pip import (including partially created workers), and seeds pip via
+base pip's `--python` option if necessary. The original traceback did not include
+the underlying stderr, so missing ensurepip is a likely cause rather than a
+confirmed diagnosis. The EEG notebook/ZIP were rebuilt; all seven targeted
+packaging/setup tests passed. Live continuation still needs the user's Colab.
+
+2026-11-08: The user subsequently authorized frontend work on `demo.html` and
+chose **replay real saved results** rather than a running backend. The previous
+frontend restriction no longer applies to this demo task. The current website
+from `origin/main` was merged into `leo-grimeland` to preserve its existing design.
+The replay implementation uses `assets/demo-data.js`, `assets/demo.js` and
+`assets/demo.css`; usage is in the repository-root `docs/DEMO_REPLAY.md`.
+Eleven local Chrome browser tests passed, including report/folder loading,
+edit receipts, hash mismatch rejection, failed/excluded runs, export/reload,
+keyboard/playback, text injection handling and mobile layouts. Test records
+are synthetic and are not bundled as experiment evidence. No real EEG results
+were located or supplied; the page starts with an explicit empty state. The
+demo edits are local and have not been pushed or deployed. No backend execution
+or live provider request was needed for this frontend work.
+
+## EEG backend implementation record
+
 The user authorized implementing the EEG pivot from their implementation PDF.
-The frontend stays out of scope. Do not execute real EEG experiments, pretrained
+At that stage the frontend was out of scope. Do not execute real EEG experiments, pretrained
 models or paid Astra calls locally: the user runs experiments in Colab.
 
 Use `docs/EEG_EXPERIMENT.md` for the protocol and run instructions, and

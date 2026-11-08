@@ -3,15 +3,52 @@
 This is the current Kirby experiment. The earlier MedPhi/sycophancy/pruning
 workflows remain available for reproducing their evidence. The new workflow
 does not use their datasets, checkpoints, attempt IDs, or Colab environment.
-The frontend is unchanged.
+Saved reports can be replayed locally in `demo.html`.
+
+## Feedback-guided follow-up (2026-11-08)
+
+Run `88dba5f4-e935-42d3-b85f-8c4f28f0fe0d` completed: six eligible models,
+12 Astra diagnosis calls, all abstaining (`uncertain`), and zero Astra repair
+calls. The previous runner skipped repairs after either `clean` or `uncertain`.
+It therefore did not test whether development-guided Astra edits could help.
+
+The new default `repair_policy=feedback_guided` preserves every blind diagnosis
+and then requests repair proposals for each eligible model/A-B condition,
+regardless of its diagnosis. Packets include the frozen first response and
+development measurements, without hidden condition labels or final results.
+Astra can retain an uncertain diagnosis while proposing a testable edit. It
+can still stop if no defensible candidate exists, including zero flip rate.
+Every candidate must pass the same four acceptance checks; no accepted edits
+are guaranteed. Reports record policy, repair request count, attempted and
+accepted edits, and stop reason. `--repair-policy diagnosis_gated` restores
+the old gate. Earlier reports without this config field used that gate;
+the evidence format remains `eeg_shortcut_audit_v1`.
+
+The notebook sets `REPAIR_POLICY='feedback_guided'` and streams worker output
+including diagnosis requests, repair requests and edit acceptance/rejection.
+Upload the rebuilt ZIP and use a fresh run UUID. Subject 1's final session has
+already been inspected: this repeat is exploratory, not fresh confirmation.
+Freeze the revised procedure before a later study on previously unseen subjects.
 
 ## Run on Colab
+
+For the next **new-subject replication**, open
+`notebooks/kirby_eeg_replication_colab.ipynb`, enable GPU and the API secret,
+then run all cells and upload the updated `dist/kirby_eeg_colab.zip`. The separate
+notebook fixes subjects 2/3, seeds 0/1/2, clean/blink and both A/B conditions.
+It verifies `experiments/eeg_replication_v1.json` and normalized source hashes
+before execution, retains its own run ID across reruns, and includes the plan
+in the exported evidence. Maximum 144 requests and $100 estimated token cost;
+this is not a provider billing limit. Do not modify the settings after seeing
+results. See `EEG_ROADMAP.md` for the predeclared analysis and remaining limits.
+
+The original subject-1 exploratory launcher remains available:
 
 1. Upload `notebooks/kirby_eeg_colab.ipynb` through Colab's **File > Upload notebook**.
 2. Select a GPU runtime. Add `OPENAI_API_KEY` in Colab Secrets and enable notebook access.
 3. Run the setup cell and upload **`dist/kirby_eeg_colab.zip`** when prompted.
    This is a different source bundle from `kirby_colab.zip`.
-4. Leave the first-run configuration at subject 1, seeds 0/1/2, clean/blink,
+4. Leave the exploratory follow-up configuration at subject 1, seeds 0/1/2, clean/blink,
    A/B evidence, 300 maximum epochs and 30-epoch patience. Run the remaining cells.
 5. Preserve the downloaded `kirby-eeg-evidence-<UUID>.zip`. Start with its
    root `START_HERE.md`. A failed/interrupted run exports partial evidence;
@@ -33,6 +70,11 @@ source bundle or changed settings cannot silently reuse an old experiment.
 Source and worker environments are isolated by source hash under
 `/content/kirby-eeg-workspace`. Colab storage is temporary: download evidence.
 The notebook currently does not resume an interrupted training/API search.
+
+Environment setup uses `venv --without-pip` because some Colab images omit
+`ensurepip`. It checks the worker interpreter and pip, repairs a partially
+created environment in place, and uses base pip's `--python` option to seed
+worker pip if needed. Existing experiment records are not deleted or restarted.
 
 Equivalent CLI after `pip install -e '.[eeg]'`:
 
@@ -117,9 +159,10 @@ First responses are scored separately and never retroactively improved by repair
 and false positives on clean models are reported separately. Excluded models
 are not quietly counted as correct diagnoses.
 
-**Repairs.** Clean/uncertain first diagnoses leave the checkpoint unchanged.
-Other diagnoses can propose up to five single operations, seeing current weights
-and development feedback only. Temporal scaling includes folded bias; spatial
+**Repairs.** Under the default feedback-guided policy, all eligible diagnoses
+can proceed to up to five single operations. The legacy diagnosis-gated policy
+skips clean/uncertain diagnoses. Repair packets contain current weights, the
+frozen blind response and development feedback only. Temporal scaling includes folded bias; spatial
 and classifier scaling affects nominated weights only. Factors are 0–1.5.
 Replacement temporal taps must stay within that filter's ORIGINAL min/max.
 At most 25% of ORIGINAL inference parameters may differ cumulatively.

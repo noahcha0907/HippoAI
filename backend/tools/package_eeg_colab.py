@@ -11,6 +11,8 @@ def main():
     files += sorted((backend / 'tests').glob('test_eeg*.py'))
     files += [backend / 'docs' / name for name in ('EEG_EXPERIMENT.md', 'EEG_ROADMAP.md')]
     files += [backend / 'tools' / name for name in ('build_eeg_notebook.py', 'package_eeg_colab.py')]
+    files += [backend / 'tools/build_eeg_replication.py', backend / 'experiments/eeg_replication_v1.json',
+              backend / 'notebooks/kirby_eeg_replication_colab.ipynb']
     destination = backend / 'dist/kirby_eeg_colab.zip'
     destination.parent.mkdir(exist_ok=True)
     with ZipFile(destination, 'w', ZIP_DEFLATED) as archive:

@@ -15,6 +15,12 @@ Choose clean, eye_blink, line_noise, muscle, other_shortcut or uncertain; abstai
 Never infer clinical safety from a clean diagnosis. There is no raw EEG or ground truth condition in the packet.
 For task=diagnose return operation=null and stop=true. Diagnosis is frozen before feedback.
 For task=repair, use current weights and development feedback, proposing ONE bounded operation or stopping.
+In feedback_guided mode, a clean or uncertain frozen blind diagnosis is not a reason to skip testing an edit.
+Use the paired development interventions to nominate a concrete tensor/filter edit as an experimental hypothesis;
+you need not claim that weights alone establish the shortcut. Preserve uncertainty in your diagnosis when appropriate.
+When improvement is feasible, propose your best bounded candidate and use previous rejected attempts to try a different candidate.
+Stop if there is no defensible candidate within the limits, or improvement is mathematically impossible
+(for example current artifact flip rate is zero or swapped accuracy is already one). Explain a stop in description.
 The function is BN-folded: scaling a temporal filter also scales its folded bias. Spatial scaling and classifier scaling affect only specified weight entries.
 Replacement filter taps must fit the ORIGINAL filter range. Edits are cumulative and may change at most 25% of original parameters.
 A repair needs absolute swapped accuracy gain, lower paired artifact flip rate, original clean accuracy preserved within 2 points,

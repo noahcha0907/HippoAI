@@ -33,7 +33,8 @@ with zipfile.ZipFile(EEG_SOURCE_ZIP) as archive:
         if (path.is_absolute() or '..' in path.parts or '\\' in entry.filename or ':' in entry.filename
                 or not path.parts or path.parts[0] != 'backend'
                 or stat.S_ISLNK(entry.external_attr >> 16)
-                or path.suffix not in ('.py', '.md', '.toml', '.ipynb')):
+                or (path.suffix not in ('.py', '.md', '.toml', '.ipynb')
+                    and entry.filename != 'backend/experiments/eeg_replication_v1.json')):
             raise ValueError('Unsafe source archive member')
         target = SOURCE.joinpath(*path.parts)
         if not target.resolve().is_relative_to(SOURCE.resolve()):
@@ -44,8 +45,25 @@ if not (BACKEND / 'kirby/eeg/runner.py').is_file():
     raise ValueError('This is not the EEG source bundle')
 VENV = WORKSPACE / ('venv-' + source_hash[:16])
 PYTHON = VENV / 'bin/python'
-if not PYTHON.exists():
-    subprocess.run([sys.executable, '-m', 'venv', '--system-site-packages', str(VENV)], check=True)
+def worker_ready():
+    if not PYTHON.exists():
+        return False
+    probe = subprocess.run([str(PYTHON), '-c',
+        'import sys, pip; from pathlib import Path; assert sys.prefix != sys.base_prefix; '
+        'assert Path(sys.prefix).resolve() == Path(sys.argv[1]).resolve()', str(VENV)],
+        capture_output=True, text=True)
+    return probe.returncode == 0
+
+if not worker_ready():
+    # Some Colab images omit ensurepip. Also repair partially created workers:
+    # a python executable alone does not mean the environment is usable.
+    subprocess.run([sys.executable, '-m', 'venv', '--without-pip', '--system-site-packages', str(VENV)], check=True)
+    if not worker_ready():
+        # Base pip manages the target interpreter without requiring its ensurepip.
+        subprocess.run([sys.executable, '-m', 'pip', '--python', str(PYTHON),
+                        'install', '--disable-pip-version-check', 'pip'], check=True)
+    if not worker_ready():
+        raise RuntimeError('The EEG worker is not usable; inspect the setup output above before running an experiment.')
 # Reuses Colab's CUDA torch; EEG dependencies live in the dedicated worker environment.
 if not (VENV / 'kirby-installed.json').exists():
     subprocess.run([str(PYTHON), '-m', 'pip', 'install', '--disable-pip-version-check', '-e', str(BACKEND) + '[eeg]'], check=True)
@@ -60,7 +78,7 @@ print('EEG workspace ready:', WORKSPACE)
 '''
 
 CONFIG = r'''
-# First real experiment: 6 EEG models (1 subject x 3 seeds x clean/blink).
+# Follow-up: 6 EEG models. Subject 1 final results were already inspected: exploratory repeat.
 SUBJECTS = [1]
 SEEDS = [0, 1, 2]
 CONDITIONS = ['clean', 'eye_blink']
@@ -68,6 +86,7 @@ EVIDENCE_CONDITIONS = ['A', 'B']
 EPOCHS = 300
 PATIENCE = 30
 ATTEMPTS = 5
+REPAIR_POLICY = 'feedback_guided'  # Test edits even after an uncertain/clean blind diagnosis.
 RUN_ASTRA = True
 EXTENDED_BASELINES = False
 MAX_API_CALLS = 72
@@ -78,7 +97,7 @@ RUN_ID = None  # Reuses saved run. For a deliberate NEW experiment set a fresh U
 RUN = r'''
 settings = {name: globals()[name] for name in (
     'SUBJECTS', 'SEEDS', 'CONDITIONS', 'EVIDENCE_CONDITIONS', 'EPOCHS', 'PATIENCE',
-    'ATTEMPTS', 'RUN_ASTRA', 'EXTENDED_BASELINES', 'MAX_API_CALLS', 'MAX_ESTIMATED_USD')}
+    'ATTEMPTS', 'REPAIR_POLICY', 'RUN_ASTRA', 'EXTENDED_BASELINES', 'MAX_API_CALLS', 'MAX_ESTIMATED_USD')}
 settings['source_sha256'] = source_hash
 attempt_file = WORKSPACE / 'eeg-attempt-id.txt'
 if RUN_ID is not None:
@@ -110,14 +129,29 @@ else:
                '--subjects', *map(str, SUBJECTS), '--seeds', *map(str, SEEDS),
                '--conditions', *CONDITIONS, '--evidence-conditions', *EVIDENCE_CONDITIONS,
                '--epochs', str(EPOCHS), '--patience', str(PATIENCE), '--attempts', str(ATTEMPTS),
+               '--repair-policy', REPAIR_POLICY,
                '--max-api-calls', str(MAX_API_CALLS), '--max-estimated-usd', str(MAX_ESTIMATED_USD)]
     if not RUN_ASTRA:
         command.append('--no-astra')
     if EXTENDED_BASELINES:
         command.append('--extended-baselines')
     try:
-        completed = subprocess.run(command, cwd=BACKEND, env=env)
-        print('Worker exit code:', completed.returncode)
+        print('Starting experiment:', run_id, '| repair policy:', REPAIR_POLICY, flush=True)
+        with subprocess.Popen(command, cwd=BACKEND, env=env, stdout=subprocess.PIPE,
+                              stderr=subprocess.STDOUT, text=True, bufsize=1) as worker:
+            try:
+                for line in worker.stdout:
+                    print(line, end='', flush=True)
+                returncode = worker.wait()
+            except BaseException:
+                worker.terminate()
+                try:
+                    worker.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    worker.kill()
+                    worker.wait()
+                raise
+        print('Worker exit code:', returncode, flush=True)
     finally:
         env.pop('OPENAI_API_KEY', None)
 if (run_root / 'START_HERE.md').exists():
@@ -146,6 +180,7 @@ def main():
                     '# Kirby: EEG shortcut audit\n',
                     'Use a GPU runtime. Upload **kirby_eeg_colab.zip** in the first cell. Enable Colab Secret `OPENAI_API_KEY` for Astra.\n',
                     'Defaults train one subject, three seeds, clean/blink conditions. A=weights, B=weights plus signal views.\n',
+                    'Feedback-guided repair tests bounded edits even after blind abstention; accepted repairs are not guaranteed. Subject 1 is an exploratory repeat after prior final results were inspected.\n',
                     'No Astra request occurs before development gates. Final session is evaluated only after all methods are frozen.\n',
                     'Rerunning cells displays the saved run; it does not repeat paid requests. Failed runs export partial evidence.\n',
                     'Keep the downloaded evidence ZIP. The first real run validates the implementation; it does not establish clinical usefulness.\n']},
