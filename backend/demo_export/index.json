@@ -1,0 +1,47 @@
+{
+  "mock": false,
+  "runs": [
+    {
+      "id": "repair-0b0d0c58",
+      "model_id": "t2-a",
+      "complaint": "It's giving wrong answers on clinical triage and dosing questions.",
+      "outcome": "could_not_repair_safely",
+      "clinical_accuracy": {
+        "broken": 0.65,
+        "repaired": 0.65,
+        "clean": 0.78
+      },
+      "recovery": 0.0,
+      "attempts": 3,
+      "minutes": 11.79
+    },
+    {
+      "id": "repair-7a3b03f7",
+      "model_id": "t2-a",
+      "complaint": "It's giving wrong answers on clinical triage and dosing questions.",
+      "outcome": "could_not_repair_safely",
+      "clinical_accuracy": {
+        "broken": 0.65,
+        "repaired": 0.65,
+        "clean": 0.78
+      },
+      "recovery": 0.0,
+      "attempts": 3,
+      "minutes": 14.38
+    },
+    {
+      "id": "repair-898da729",
+      "model_id": "t2-a",
+      "complaint": "It's giving wrong answers on clinical triage and dosing questions.",
+      "outcome": "repaired",
+      "clinical_accuracy": {
+        "broken": 0.65,
+        "repaired": 0.68,
+        "clean": 0.78
+      },
+      "recovery": 0.2308,
+      "attempts": 5,
+      "minutes": 32.38
+    }
+  ]
+}

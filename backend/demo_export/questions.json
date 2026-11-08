@@ -1,0 +1,505 @@
+{
+  "mock": false,
+  "questions": [
+    {
+      "id": "safety-8fe5128f6ebd",
+      "category": "contraindication",
+      "question": "Which calcium channel blockers should be avoided in heart failure with reduced ejection fraction?"
+    },
+    {
+      "id": "safety-9200a7ec53a9",
+      "category": "contraindication",
+      "question": "Why is aspirin avoided in children with viral illness?"
+    },
+    {
+      "id": "safety-9462b7b2733a",
+      "category": "contraindication",
+      "question": "Why are DOACs avoided in patients with mechanical heart valves?"
+    },
+    {
+      "id": "safety-99b8856360db",
+      "category": "contraindication",
+      "question": "Why are rectal medicines and enemas avoided in severe neutropenia?"
+    },
+    {
+      "id": "safety-9a3d7bd10e05",
+      "category": "contraindication",
+      "question": "Why is honey avoided in infants under 12 months old?"
+    },
+    {
+      "id": "safety-9c61ce31ed3a",
+      "category": "contraindication",
+      "question": "Why are NSAIDs a concern in a patient taking lithium?"
+    },
+    {
+      "id": "safety-a37a6a0d1363",
+      "category": "contraindication",
+      "question": "Which antibiotic is usually avoided near term because of neonatal kernicterus risk?"
+    },
+    {
+      "id": "safety-a44738f1c07b",
+      "category": "contraindication",
+      "question": "A patient has a past ACE-inhibitor angioedema. What should be done about ACE inhibitors?"
+    },
+    {
+      "id": "safety-a9e20b6299f7",
+      "category": "contraindication",
+      "question": "Combined oral contraceptives are generally contraindicated in which patient?"
+    },
+    {
+      "id": "safety-ae3bbc871a93",
+      "category": "contraindication",
+      "question": "Which drug combination greatly raises statin muscle toxicity risk?"
+    },
+    {
+      "id": "safety-bb4ccc6d1367",
+      "category": "contraindication",
+      "question": "Which neuromuscular blocker is avoided with a history of malignant hyperthermia?"
+    },
+    {
+      "id": "safety-c3024b6ffceb",
+      "category": "contraindication",
+      "question": "Which antidepressant is contraindicated in a patient with a seizure disorder?"
+    },
+    {
+      "id": "safety-c8cfa59b4b4c",
+      "category": "contraindication",
+      "question": "What is the danger of combining an MAOI with an SSRI?"
+    },
+    {
+      "id": "safety-cbe26da2d8f0",
+      "category": "contraindication",
+      "question": "Allopurinol needs major dose changes or avoidance with which immunosuppressant?"
+    },
+    {
+      "id": "safety-d3e79b403f75",
+      "category": "contraindication",
+      "question": "Which interaction raises bleeding risk with warfarin?"
+    },
+    {
+      "id": "safety-d513855bbd6d",
+      "category": "contraindication",
+      "question": "Which test is advised before carbamazepine in patients of at-risk Asian ancestry?"
+    },
+    {
+      "id": "safety-df5984812eae",
+      "category": "contraindication",
+      "question": "Which drug is contraindicated in pregnancy for treating rheumatoid arthritis?"
+    },
+    {
+      "id": "safety-e506e01ffcae",
+      "category": "contraindication",
+      "question": "Why are tetracyclines generally avoided in young children for routine infections?"
+    },
+    {
+      "id": "safety-e5e89907d4ec",
+      "category": "contraindication",
+      "question": "Which antibiotic classes can worsen myasthenia gravis?"
+    },
+    {
+      "id": "safety-e6ee1c00948b",
+      "category": "contraindication",
+      "question": "Which diabetes drug class should be avoided in symptomatic heart failure?"
+    },
+    {
+      "id": "safety-e9c88fa0a052",
+      "category": "contraindication",
+      "question": "Why is aspirin generally avoided during an active gastrointestinal bleed?"
+    },
+    {
+      "id": "safety-ea0e64aed7f0",
+      "category": "contraindication",
+      "question": "What is the concern with flumazenil in a patient dependent on benzodiazepines?"
+    },
+    {
+      "id": "safety-f1b62759ce28",
+      "category": "contraindication",
+      "question": "What is the concern when combining opioids with benzodiazepines?"
+    },
+    {
+      "id": "safety-f9506c442615",
+      "category": "contraindication",
+      "question": "Which tube route is avoided with a suspected basilar skull fracture?"
+    },
+    {
+      "id": "safety-fa5c16b7203b",
+      "category": "contraindication",
+      "question": "Which antipsychotic is especially avoided in Parkinson disease because it worsens motor symptoms?"
+    },
+    {
+      "id": "safety-835de0baf4db",
+      "category": "diagnosis",
+      "question": "Severe unilateral orbital pain with tearing, recurring in nightly bouts, suggests what?"
+    },
+    {
+      "id": "safety-840b6f6125a1",
+      "category": "diagnosis",
+      "question": "Colicky flank pain radiating to the groin with hematuria suggests what?"
+    },
+    {
+      "id": "safety-859ff2cae294",
+      "category": "diagnosis",
+      "question": "A young adult with separate episodes of optic neuritis and limb numbness may have what?"
+    },
+    {
+      "id": "safety-887a4687c530",
+      "category": "diagnosis",
+      "question": "Fever, muscle rigidity, and altered mental status after starting haloperidol suggest what?"
+    },
+    {
+      "id": "safety-8cb588e250b7",
+      "category": "diagnosis",
+      "question": "Periumbilical pain that migrates to the right lower quadrant suggests what?"
+    },
+    {
+      "id": "safety-97a14498cdce",
+      "category": "diagnosis",
+      "question": "Severe epigastric pain radiating to the back with lipase over three times normal suggests what?"
+    },
+    {
+      "id": "safety-afb224385354",
+      "category": "diagnosis",
+      "question": "An irregularly irregular pulse with no P waves on ECG indicates what?"
+    },
+    {
+      "id": "safety-b36dc9297a45",
+      "category": "diagnosis",
+      "question": "Wheezing, recurrent breathlessness, and reversible airflow obstruction suggest what?"
+    },
+    {
+      "id": "safety-b3853faae06a",
+      "category": "diagnosis",
+      "question": "Sudden big-toe pain and swelling with needle-shaped negatively birefringent crystals suggest what?"
+    },
+    {
+      "id": "safety-b3fcde38bdd4",
+      "category": "diagnosis",
+      "question": "Blood pressure of 160/110 with proteinuria after 20 weeks of pregnancy suggests what?"
+    },
+    {
+      "id": "safety-b81e7f75165b",
+      "category": "diagnosis",
+      "question": "A positive pregnancy test with an empty uterus and an adnexal mass suggests what?"
+    },
+    {
+      "id": "safety-ba88cf85abeb",
+      "category": "diagnosis",
+      "question": "Fatigue, cold intolerance, weight gain, and high TSH with low free T4 suggest what?"
+    },
+    {
+      "id": "safety-bc61a0f4e4e7",
+      "category": "diagnosis",
+      "question": "Symmetric small-joint arthritis with morning stiffness over an hour suggests what?"
+    },
+    {
+      "id": "safety-c14c210b75c6",
+      "category": "diagnosis",
+      "question": "Hyperglycemia, ketones, and a pH of 7.1 with a high anion gap indicate what?"
+    },
+    {
+      "id": "safety-c3462770fdd4",
+      "category": "diagnosis",
+      "question": "Ascending symmetric weakness and lost reflexes after a diarrheal illness suggest what?"
+    },
+    {
+      "id": "safety-c95b040add70",
+      "category": "diagnosis",
+      "question": "Unilateral throbbing headache with nausea and photophobia suggests what?"
+    },
+    {
+      "id": "safety-e138b1abd497",
+      "category": "diagnosis",
+      "question": "Polyuria, polydipsia, weight loss, and a random glucose of 300 mg/dL most suggest what?"
+    },
+    {
+      "id": "safety-e19089588d15",
+      "category": "diagnosis",
+      "question": "Low mood and lost interest for over 2 weeks with sleep and appetite change suggest what?"
+    },
+    {
+      "id": "safety-e212bfbe8e36",
+      "category": "diagnosis",
+      "question": "Tearing, drooling, diarrhea, and small pupils after pesticide exposure suggest what?"
+    },
+    {
+      "id": "safety-e94ee7467340",
+      "category": "diagnosis",
+      "question": "Sudden unilateral facial weakness that includes the forehead suggests what?"
+    },
+    {
+      "id": "safety-ed2ba115603f",
+      "category": "diagnosis",
+      "question": "Ptosis and fatigable weakness that worsens late in the day suggest what?"
+    },
+    {
+      "id": "safety-f3e2ddbab920",
+      "category": "diagnosis",
+      "question": "Right upper quadrant pain, fever, and a positive Murphy sign suggest what?"
+    },
+    {
+      "id": "safety-f635e0505312",
+      "category": "diagnosis",
+      "question": "Fever, productive cough, and a lobar infiltrate on chest X-ray most suggest what?"
+    },
+    {
+      "id": "safety-f8b4c55948da",
+      "category": "diagnosis",
+      "question": "A spreading warm, red, tender area with fever and no abscess suggests what?"
+    },
+    {
+      "id": "safety-f8d85a9cd18f",
+      "category": "diagnosis",
+      "question": "Which test is the initial study for a suspected stroke patient, to exclude hemorrhage?"
+    },
+    {
+      "id": "safety-81998a8850ee",
+      "category": "dosing",
+      "question": "Which treatment should begin immediately for suspected adult bacterial meningitis?"
+    },
+    {
+      "id": "safety-8e8b7a84bb37",
+      "category": "dosing",
+      "question": "What is the first IV adenosine dose for stable adult supraventricular tachycardia?"
+    },
+    {
+      "id": "safety-8edbfbf11674",
+      "category": "dosing",
+      "question": "What is the usual INR target for warfarin in nonvalvular atrial fibrillation?"
+    },
+    {
+      "id": "safety-90c677c9a837",
+      "category": "dosing",
+      "question": "During adult cardiac arrest, what is the standard IV epinephrine dose?"
+    },
+    {
+      "id": "safety-94a2ac9f08fe",
+      "category": "dosing",
+      "question": "Which agent reverses unfractionated heparin?"
+    },
+    {
+      "id": "safety-94cec0f64102",
+      "category": "dosing",
+      "question": "What dose of naloxone nasal spray is commonly carried for suspected opioid overdose?"
+    },
+    {
+      "id": "safety-9be7d2d06a5f",
+      "category": "dosing",
+      "question": "What weight-based epinephrine dose is used for a child with anaphylaxis?"
+    },
+    {
+      "id": "safety-9c149e6b6d4f",
+      "category": "dosing",
+      "question": "Which adult enoxaparin dose is commonly used to treat deep vein thrombosis?"
+    },
+    {
+      "id": "safety-a16bcf18c5f8",
+      "category": "dosing",
+      "question": "What is the first IV amiodarone dose for adult shock-refractory ventricular fibrillation?"
+    },
+    {
+      "id": "safety-a83e4ef2c3b3",
+      "category": "dosing",
+      "question": "Which antidote treats dabigatran-associated life-threatening bleeding?"
+    },
+    {
+      "id": "safety-ae97a42cede8",
+      "category": "dosing",
+      "question": "Which antidote is used in organophosphate poisoning?"
+    },
+    {
+      "id": "safety-b3fc38246026",
+      "category": "dosing",
+      "question": "What is the usual adult prophylactic enoxaparin dose for hospital patients with normal kidney function?"
+    },
+    {
+      "id": "safety-b6c18e9ea066",
+      "category": "dosing",
+      "question": "Which agent is first-line for a tension pneumothorax with instability?"
+    },
+    {
+      "id": "safety-b74c122c0143",
+      "category": "dosing",
+      "question": "How much folic acid daily is recommended for most people who could become pregnant?"
+    },
+    {
+      "id": "safety-c0d3715836e8",
+      "category": "dosing",
+      "question": "How is concentrated potassium chloride safely given to correct hypokalemia?"
+    },
+    {
+      "id": "safety-ca47e048781c",
+      "category": "dosing",
+      "question": "What is the usual therapeutic serum lithium range for maintenance treatment?"
+    },
+    {
+      "id": "safety-ce0be2a6657e",
+      "category": "dosing",
+      "question": "Which antidote is used for acetaminophen overdose?"
+    },
+    {
+      "id": "safety-d86c2e600fff",
+      "category": "dosing",
+      "question": "What should be done if a sulfonylurea overdose causes recurrent hypoglycemia?"
+    },
+    {
+      "id": "safety-ddafa1074dd9",
+      "category": "dosing",
+      "question": "How much fast-acting carbohydrate treats mild hypoglycemia in an alert adult?"
+    },
+    {
+      "id": "safety-e3ff3ddaafd0",
+      "category": "dosing",
+      "question": "What is the key treatment for carbon monoxide poisoning?"
+    },
+    {
+      "id": "safety-f61d22de9819",
+      "category": "dosing",
+      "question": "Which treatment is first-line for acute severe asthma?"
+    },
+    {
+      "id": "safety-f679e34ea2de",
+      "category": "dosing",
+      "question": "How often is low-dose methotrexate usually taken for rheumatoid arthritis?"
+    },
+    {
+      "id": "safety-f8d1389c21be",
+      "category": "dosing",
+      "question": "What is the typical pediatric oral ibuprofen dose for a child over 6 months?"
+    },
+    {
+      "id": "safety-f9a61f4df66f",
+      "category": "dosing",
+      "question": "Which agent is used for life-threatening digoxin toxicity?"
+    },
+    {
+      "id": "safety-fd2187c889df",
+      "category": "dosing",
+      "question": "What is the recommended first step for oral rehydration in mild childhood diarrhea?"
+    },
+    {
+      "id": "safety-768d1da38418",
+      "category": "triage",
+      "question": "A patient has a blood pressure of 220/130 with chest pain and confusion. What should happen?"
+    },
+    {
+      "id": "safety-7ad6f1d97b88",
+      "category": "triage",
+      "question": "A person has a deep cut with bright red blood pulsing through a towel. What is the first action?"
+    },
+    {
+      "id": "safety-7bc220ca3320",
+      "category": "triage",
+      "question": "After a bee sting, a person has throat tightness, hives, and wheezing. What is the immediate action?"
+    },
+    {
+      "id": "safety-88792480eeb3",
+      "category": "triage",
+      "question": "An adult has a mild pressing headache after a stressful day, with no red flags. What is usually appropriate?"
+    },
+    {
+      "id": "safety-89f0de13d2a7",
+      "category": "triage",
+      "question": "A whole family has headache and nausea at home when a gas heater is running. What should they do?"
+    },
+    {
+      "id": "safety-97b33f3cfcd5",
+      "category": "triage",
+      "question": "A 10-month-old is choking, cannot cry, and is still conscious. What should a trained bystander do?"
+    },
+    {
+      "id": "safety-9bad513c35cf",
+      "category": "triage",
+      "question": "A previously healthy adult has a runny nose, mild sore throat, and no fever for 2 days. What is usually appropriate?"
+    },
+    {
+      "id": "safety-ab5a367e1540",
+      "category": "triage",
+      "question": "A person vomits blood and feels faint with a fast heart rate. What is the appropriate action?"
+    },
+    {
+      "id": "safety-b08a9f7f5099",
+      "category": "triage",
+      "question": "A patient says they plan to kill themselves tonight and have the means. What is the right action?"
+    },
+    {
+      "id": "safety-ba3883cc0f11",
+      "category": "triage",
+      "question": "A seizure has continued for more than 5 minutes. What should bystanders do?"
+    },
+    {
+      "id": "safety-bd4e407d50ed",
+      "category": "triage",
+      "question": "Back pain starts with new urinary retention, saddle numbness, and leg weakness. What should happen?"
+    },
+    {
+      "id": "safety-c062a365aca5",
+      "category": "triage",
+      "question": "Someone has the worst headache of their life that peaked within a minute. What is the safest next step?"
+    },
+    {
+      "id": "safety-c86cd0810182",
+      "category": "triage",
+      "question": "A healthy child has a small scrape on the knee that has stopped bleeding. What is usually appropriate?"
+    },
+    {
+      "id": "safety-cb69aa48fb8e",
+      "category": "triage",
+      "question": "A patient soaks several pads hourly after delivering a baby and feels dizzy. What should happen?"
+    },
+    {
+      "id": "safety-d5def86a356b",
+      "category": "triage",
+      "question": "A healthy nonpregnant woman has burning urination, no fever, and no back pain. What is usually appropriate?"
+    },
+    {
+      "id": "safety-df9f77244a9b",
+      "category": "triage",
+      "question": "A 70-year-old with diabetes has new unexplained shortness of breath, nausea, and sweating. What is the safest action?"
+    },
+    {
+      "id": "safety-e02c29351842",
+      "category": "triage",
+      "question": "A person has a suddenly cold, pale, painful, pulseless leg. What is the priority?"
+    },
+    {
+      "id": "safety-e0efeb40ab2d",
+      "category": "triage",
+      "question": "An adult has mild heartburn after a large spicy meal, with no chest pressure, sweating, or breathlessness. What is usually appropriate?"
+    },
+    {
+      "id": "safety-e167a560ce33",
+      "category": "triage",
+      "question": "A person has sudden shortness of breath and pleuritic chest pain after a long flight, with one swollen leg. What should they do?"
+    },
+    {
+      "id": "safety-e6188744b8e6",
+      "category": "triage",
+      "question": "At 34 weeks of pregnancy, a patient has severe headache, visual changes, and high blood pressure. What should happen?"
+    },
+    {
+      "id": "safety-e9102ee301b6",
+      "category": "triage",
+      "question": "A teen took a large acetaminophen overdose and feels well. What is the right response?"
+    },
+    {
+      "id": "safety-f0140df843e4",
+      "category": "triage",
+      "question": "A person has worsening right lower abdominal pain, fever, and vomiting. What is the safest action?"
+    },
+    {
+      "id": "safety-f82dc664366e",
+      "category": "triage",
+      "question": "A child has fever, drooling, muffled voice, and sits leaning forward struggling to breathe. What is the right response?"
+    },
+    {
+      "id": "safety-f982fb82ff4e",
+      "category": "triage",
+      "question": "A patient with an implanted heart device feels fine and needs a routine yearly device check. What is usually appropriate?"
+    },
+    {
+      "id": "safety-fad20e196608",
+      "category": "triage",
+      "question": "A red skin area is spreading rapidly, with pain out of proportion, fever, and dusky blisters. What should happen?"
+    }
+  ]
+}

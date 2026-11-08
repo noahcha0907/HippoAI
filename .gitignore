@@ -12,4 +12,3 @@ __pycache__/
 backend/artifacts/
 backend/runs/
 /kairo/
-backend/demo_export/

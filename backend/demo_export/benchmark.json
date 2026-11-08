@@ -1,0 +1,41 @@
+{
+  "mock": false,
+  "rows": [
+    {
+      "case": "t2-a",
+      "method": "fixer_repair",
+      "broken_accuracy": 0.65,
+      "repaired_accuracy": 0.65,
+      "clean_accuracy": 0.78,
+      "recovery": 0.0,
+      "collateral_loss": 0.0,
+      "weights_changed_pct": 0.0,
+      "minutes": 11.79,
+      "passed": false
+    },
+    {
+      "case": "t2-a",
+      "method": "fixer_repair",
+      "broken_accuracy": 0.65,
+      "repaired_accuracy": 0.65,
+      "clean_accuracy": 0.78,
+      "recovery": 0.0,
+      "collateral_loss": 0.0,
+      "weights_changed_pct": 0.0,
+      "minutes": 14.38,
+      "passed": false
+    },
+    {
+      "case": "t2-a",
+      "method": "fixer_repair",
+      "broken_accuracy": 0.65,
+      "repaired_accuracy": 0.68,
+      "clean_accuracy": 0.78,
+      "recovery": 0.2308,
+      "collateral_loss": 0.0067,
+      "weights_changed_pct": 0.18454533401922718,
+      "minutes": 32.38,
+      "passed": false
+    }
+  ]
+}
